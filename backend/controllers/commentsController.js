@@ -13,3 +13,11 @@ exports.commentGet = asyncHandler(async (req, res) => {});
 exports.commentPut = asyncHandler(async (req, res) => {});
 
 exports.commentDelete = asyncHandler(async (req, res) => {});
+
+exports.commentsOnPostGet = asyncHandler(async (req, res) => {});
+
+exports.commentOnPostGet = asyncHandler(async (req, res) => {});
+
+exports.commentsByUserGet = asyncHandler(async (req, res) => {});
+
+exports.commentByUserGet = asyncHandler(async (req, res) => {});

@@ -1,9 +1,14 @@
 require('dotenv').config();
 const express = require('express');
-const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
+
+const apiRouter = require('./routes/api');
+
+const app = express();
+
+// Set up mongoose connection
 
 const dbString =
   process.env.NODE_ENV === 'production'
@@ -15,15 +20,23 @@ mongoose
   .connect(dbString)
   .catch((err) => console.log(err));
 
-const apiRouter = require('./routes/api');
+// Set up passport authentication
 
-const app = express();
+require('./config/passport');
+
+app.use((req, res, next) => {
+  console.log(req.headers.authorization);
+  next();
+});
+
+// Set up basic middleware
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+
+// Set up routes
 
 app.use('/api', apiRouter);
 

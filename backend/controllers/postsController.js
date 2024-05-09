@@ -13,3 +13,7 @@ exports.postGet = asyncHandler(async (req, res) => {});
 exports.postPut = asyncHandler(async (req, res) => {});
 
 exports.postDelete = asyncHandler(async (req, res) => {});
+
+exports.postsByUserGet = asyncHandler(async (req, res) => {});
+
+exports.postByUserGet = asyncHandler(async (req, res) => {});

@@ -6,6 +6,7 @@ const CommentSchema = new mongoose.Schema({
   post: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' },
   content: { type: String, required: true, maxLength: 1000 },
   time: { type: Date, default: Date.now },
+  likes: { type: Number, default: 0 },
 });
 
 CommentSchema.virtual('formattedTime').get(function () {

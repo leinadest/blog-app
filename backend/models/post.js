@@ -7,6 +7,7 @@ const PostSchema = new mongoose.Schema({
   content: { type: String, required: true, maxLength: 10000 },
   time: { type: Date, default: Date.now },
   isPublished: { type: Boolean, default: false },
+  comments: { type: [mongoose.Schema.Types.ObjectId], ref: 'Comment' },
 });
 
 PostSchema.virtual('formattedTime').get(function () {
