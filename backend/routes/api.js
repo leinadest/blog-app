@@ -31,11 +31,15 @@ function authenticate(strategy) {
   };
 }
 
+/// AUTHENTICATION ROUTES ///
+
 // Handle post request to register
 router.post('/register', authController.registerPost);
 
 // Handle post request to log in
 router.post('/login', authenticate('json'), authController.loginPost);
+
+/// POST ROUTES ///
 
 // Handle get request to fetch all posts
 router.get('/posts', postsController.postsGet);
@@ -85,6 +89,8 @@ router.delete(
   authenticate('jwt'),
   commentsController.commentDelete,
 );
+
+/// USER ROUTES ///
 
 // Handle get request to fetch all users
 router.get('/users', authenticate('jwt'), usersController.usersGet);

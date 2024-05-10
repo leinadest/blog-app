@@ -37,6 +37,14 @@ app.use('/api', apiRouter);
 
 // Handle errors
 
+app.use((req, res) =>
+  res.status(404).json({
+    status: 'error',
+    message: 'Route not found',
+    code: 'resource_not_found',
+  }),
+);
+
 app.use((err, req, res, next) => {
   if (err) {
     return res.status(err.status || 500).json({
