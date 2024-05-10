@@ -14,11 +14,23 @@ exports.registerPost = asyncHandler(async (req, res) => {
     password: hash,
     salt,
   };
-  res.json(await User.create(userInfo));
+  try {
+    const data = await User.create(userInfo);
+    return res.json({ status: 'success', data });
+  } catch (err) {
+    err.code = 'database_error';
+    throw err;
+  }
 });
 
-exports.loginPost = asyncHandler(async (req, res) =>
-  res.json(
-    jwt.sign({ user: req.user }, process.env.JWT_SECRET, { expiresIn: '1d' }),
-  ),
-);
+exports.loginPost = asyncHandler(async (req, res) => {
+  try {
+    const data = jwt.sign({ user: req.user }, process.env.JWT_SECRET, {
+      expiresIn: '1d',
+    });
+    return res.json({ status: 'success', data });
+  } catch (err) {
+    err.code = 'internal_server_error';
+    throw err;
+  }
+});

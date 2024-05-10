@@ -8,15 +8,34 @@ const postsController = require('../controllers/postsController');
 const commentsController = require('../controllers/commentsController');
 const usersController = require('../controllers/usersController');
 
+// Helper functions
+
+function authenticate(strategy) {
+  return (req, res, next) => {
+    passport.authenticate(strategy, (err, user, info) => {
+      if (err)
+        return res.status(500).json({
+          status: 'error',
+          message: 'An error occurred during authentication',
+          code: 'internal_server_error',
+        });
+      if (!user)
+        return res.status(401).json({
+          status: 'error',
+          message: info.message,
+          code: 'unauthorized',
+        });
+      req.logIn(user, { session: false });
+      next();
+    })(req, res, next);
+  };
+}
+
 // Handle post request to register
 router.post('/register', authController.registerPost);
 
 // Handle post request to log in
-router.post(
-  '/login',
-  passport.authenticate('json', { session: false }),
-  authController.loginPost,
-);
+router.post('/login', authenticate('json'), authController.loginPost);
 
 // Handle get request to fetch all posts
 router.get('/posts', postsController.postsGet);
@@ -34,86 +53,70 @@ router.get(
 );
 
 // Handle post request to create a post
-router.post(
-  '/posts',
-  passport.authenticate('jwt', { session: false }),
-  postsController.postPost,
-);
+router.post('/posts', authenticate('jwt'), postsController.postPost);
 
 // Handle post request to create a comment on a post
 router.post(
   '/posts/:postID/comments',
-  passport.authenticate('jwt', { session: false }),
+  authenticate('jwt'),
   commentsController.commentPost,
 );
 
 // Handle put request to update a post
-router.put(
-  '/posts/:postID',
-  passport.authenticate('jwt', { session: false }),
-  postsController.postPut,
-);
+router.put('/posts/:postID', authenticate('jwt'), postsController.postPut);
 
 // Handle put request to update a comment on a post
 router.put(
   '/posts/:postID/comments/:commentID',
-  passport.authenticate('jwt', { session: false }),
+  authenticate('jwt'),
   commentsController.commentPut,
 );
 
 // Handle delete request to delete a post
 router.delete(
   '/posts/:postID',
-  passport.authenticate('jwt', { session: false }),
+  authenticate('jwt'),
   postsController.postDelete,
 );
 
 // Handle delete request to delete a comment on a post
 router.delete(
   '/posts/:postID/comments/:commentID',
-  passport.authenticate('jwt', { session: false }),
+  authenticate('jwt'),
   commentsController.commentDelete,
 );
 
 // Handle get request to fetch all users
-router.get(
-  '/users',
-  passport.authenticate('jwt', { session: false }),
-  usersController.usersGet,
-);
+router.get('/users', authenticate('jwt'), usersController.usersGet);
 
 // Handle get request to fetch a user
-router.get(
-  '/users/:userID',
-  passport.authenticate('jwt', { session: false }),
-  usersController.userGet,
-);
+router.get('/users/:userID', authenticate('jwt'), usersController.userGet);
 
 // Handle get request to fetch all posts by a user
 router.get(
   '/users/:userID/posts',
-  passport.authenticate('jwt', { session: false }),
+  authenticate('jwt'),
   postsController.postsByUserGet,
 );
 
 // Handle get request to fetch a post by a user
 router.get(
   '/users/:userID/posts/:postID',
-  passport.authenticate('jwt', { session: false }),
+  authenticate('jwt'),
   postsController.postByUserGet,
 );
 
 // Handle get request to fetch all comments by a user
 router.get(
   '/users/:userID/comments',
-  passport.authenticate('jwt', { session: false }),
+  authenticate('jwt'),
   commentsController.commentsByUserGet,
 );
 
 // Handle get request to fetch a comment by a user
 router.get(
   '/users/:userID/comments/:commentID',
-  passport.authenticate('jwt', { session: false }),
+  authenticate('jwt'),
   commentsController.commentByUserGet,
 );
 

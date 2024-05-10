@@ -24,11 +24,6 @@ mongoose
 
 require('./config/passport');
 
-app.use((req, res, next) => {
-  console.log(req.headers.authorization);
-  next();
-});
-
 // Set up basic middleware
 
 app.use(logger('dev'));
@@ -39,5 +34,18 @@ app.use(cookieParser());
 // Set up routes
 
 app.use('/api', apiRouter);
+
+// Handle errors
+
+app.use((err, req, res, next) => {
+  if (err) {
+    return res.status(err.status || 500).json({
+      status: 'error',
+      message: err.message || 'Unexpected server error',
+      code: err.code,
+    });
+  }
+  next();
+});
 
 module.exports = app;
