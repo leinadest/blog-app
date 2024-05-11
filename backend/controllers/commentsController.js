@@ -6,47 +6,77 @@ const Comment = require('../models/comment');
 const Post = require('../models/post');
 const User = require('../models/user');
 
-exports.commentPost = asyncHandler(async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id).exec();
-    const post = await Post.findById(req.params.postID).exec();
-    if (!post) throw APIError(404, 'Post not found', 'resource_not_found');
+exports.commentPost = [
+  body('content')
+    .trim()
+    .isLength({ min: 1, max: 2000 })
+    .withMessage('Content must be within 1—2000 characters')
+    .escape(),
+  asyncHandler(async (req, res) => {
+    const errors = validationResult(req).array();
+    if (errors.length) throw APIError(400, errors[0].msg, 'invalid_input');
 
-    const commentInfo = {
-      user,
-      post,
-      content: req.body.content,
-    };
-    const comment = new Comment(commentInfo);
+    try {
+      const user = await User.findById(req.user._id).exec();
+      const post = await Post.findById(req.params.postID).exec();
+      if (!post) throw APIError(404, 'Post not found', 'resource_not_found');
 
-    post.comments.push(comment.id);
-    user.comments.push(comment.id);
+      const commentInfo = {
+        user,
+        post,
+        content: req.body.content,
+      };
+      const comment = new Comment(commentInfo);
 
-    const data = await Promise.all([post.save(), user.save(), comment.save()]);
-    return res.json({ status: 'success', data: data[2] });
-  } catch (err) {
-    throw APIError(err.status, err.message, 'database_error');
-  }
-});
+      post.comments.push(comment.id);
+      user.comments.push(comment.id);
 
-exports.commentPut = asyncHandler(async (req, res) => {
-  try {
-    const comment = await Comment.findById(req.params.commentID).exec();
-    const post = await Post.findById(req.params.postID).exec();
+      const data = await Promise.all([
+        post.save(),
+        user.save(),
+        comment.save(),
+      ]);
+      return res.json({ status: 'success', data: data[2] });
+    } catch (err) {
+      throw APIError(err.status, err.message, 'database_error');
+    }
+  }),
+];
 
-    if (!post) throw APIError(404, 'Post not found', 'resource_not_found');
-    if (!comment)
-      throw APIError(404, 'Comment not found', 'resource_not_found');
+exports.commentPut = [
+  body('content')
+    .trim()
+    .isLength({ min: 1, max: 2000 })
+    .withMessage('Content must be within 1—2000 characters')
+    .escape(),
+  asyncHandler(async (req, res) => {
+    const errors = validationResult(req).array();
+    if (errors.length) throw APIError(400, errors[0].msg, 'invalid_input');
 
-    comment.content = req.body.content;
-    comment.likes = req.body.likes;
+    try {
+      const comment = await Comment.findById(req.params.commentID).exec();
+      const post = await Post.findById(req.params.postID).exec();
 
-    const data = await comment.save();
-    return res.json({ status: 'success', data });
-  } catch (err) {
-    throw APIError(err.status, err.message, 'database_error');
-  }
-});
+      if (!post) throw APIError(404, 'Post not found', 'resource_not_found');
+      if (!comment)
+        throw APIError(404, 'Comment not found', 'resource_not_found');
+      if (comment.user.toString() !== req.user._id.toString())
+        throw APIError(
+          401,
+          'User is unauthorized to update this comment',
+          'unauthorized',
+        );
+
+      comment.content = req.body.content || comment.content;
+      comment.likes = req.body.likes || comment.likes;
+
+      const data = await comment.save();
+      return res.json({ status: 'success', data });
+    } catch (err) {
+      throw APIError(err.status, err.message, 'database_error');
+    }
+  }),
+];
 
 exports.commentDelete = asyncHandler(async (req, res) => {
   try {
@@ -57,6 +87,12 @@ exports.commentDelete = asyncHandler(async (req, res) => {
     if (!post) throw APIError(404, 'Post not found', 'resource_not_found');
     if (!comment)
       throw APIError(404, 'Comment not found', 'resource_not_found');
+    if (comment.user.toString() !== req.user._id.toString())
+      throw APIError(
+        401,
+        'User is unauthorized to delete this comment',
+        'unauthorized',
+      );
 
     post.comments = post.comments.filter(
       (value) => value._id.toString() !== comment.id,

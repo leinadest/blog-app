@@ -99,30 +99,17 @@ router.get('/users', authenticate('jwt'), usersController.usersGet);
 router.get('/users/:userID', authenticate('jwt'), usersController.userGet);
 
 // Handle get request to fetch all posts by a user
-router.get(
-  '/users/:userID/posts',
-  authenticate('jwt'),
-  postsController.postsByUserGet,
-);
+router.get('/users/:userID/posts', postsController.postsByUserGet);
 
 // Handle get request to fetch a post by a user
-router.get(
-  '/users/:userID/posts/:postID',
-  authenticate('jwt'),
-  postsController.postByUserGet,
-);
+router.get('/users/:userID/posts/:postID', postsController.postByUserGet);
 
 // Handle get request to fetch all comments by a user
-router.get(
-  '/users/:userID/comments',
-  authenticate('jwt'),
-  commentsController.commentsByUserGet,
-);
+router.get('/users/:userID/comments', commentsController.commentsByUserGet);
 
 // Handle get request to fetch a comment by a user
 router.get(
   '/users/:userID/comments/:commentID',
-  authenticate('jwt'),
   commentsController.commentByUserGet,
 );
 

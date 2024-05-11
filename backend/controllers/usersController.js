@@ -1,5 +1,4 @@
 const asyncHandler = require('express-async-handler');
-const { body, validationResult } = require('express-validator');
 
 const { APIError } = require('../utils/helpers');
 const User = require('../models/user');
