@@ -15,6 +15,24 @@ const UserSchema = new mongoose.Schema({
   salt: { type: String, required: true },
   posts: { type: [mongoose.Schema.Types.ObjectId], ref: 'Post' },
   comments: { type: [mongoose.Schema.Types.ObjectId], ref: 'Comment' },
+  reactedPosts: {
+    type: [
+      {
+        postID: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' },
+        reaction: { type: String, enum: ['like', 'dislike'], required: true },
+      },
+    ],
+    default: [],
+  },
+  reactedComments: {
+    type: [
+      {
+        commentID: { type: mongoose.Schema.Types.ObjectId, ref: 'Comment' },
+        reaction: { type: String, enum: ['like', 'dislike'], required: true },
+      },
+    ],
+    default: [],
+  },
 });
 
 module.exports = mongoose.model('User', UserSchema);

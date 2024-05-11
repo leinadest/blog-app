@@ -6,15 +6,17 @@ const Post = require('../models/post');
 const User = require('../models/user');
 
 exports.postsGet = asyncHandler(async (req, res) => {
-  try {
-    const posts = await Post.find().exec();
-    return res.json({ status: 'success', data: posts });
-  } catch (err) {
-    throw APIError(err.status, err.message, 'database_error');
-  }
+  const posts = await Post.find().exec();
+  return res.json({ status: 'success', data: posts });
 });
 
-exports.postPost = [
+exports.postGet = asyncHandler(async (req, res) => {
+  const post = await Post.findById(req.params.postID).exec();
+  if (!post) throw APIError(404, 'Post not found', 'resource_not_found');
+  return res.json({ status: 'success', data: post });
+});
+
+exports.postCreatePost = [
   body('title')
     .trim()
     .isLength({ max: 500 })
@@ -37,117 +39,129 @@ exports.postPost = [
       isPublished: req.body.isPublished,
     };
 
-    try {
-      const post = await Post.create(postInfo);
-      await User.findByIdAndUpdate(req.user._id, {
-        posts: [...req.user.posts, post],
-      });
-      return res.json({ status: 'success', data: post });
-    } catch (err) {
-      throw APIError(err.status, err.message, 'database_error');
-    }
+    const post = await Post.create(postInfo);
+    await User.findByIdAndUpdate(req.user._id, {
+      posts: [...req.user.posts, post],
+    });
+    return res.json({ status: 'success', data: post });
   }),
 ];
 
-exports.postGet = asyncHandler(async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.postID).exec();
-    if (!post) throw APIError(404, 'Post not found', 'resource_not_found');
-    return res.json({ status: 'success', data: post });
-  } catch (err) {
-    throw APIError(err.status, err.message, 'database_error');
-  }
-});
-
-exports.postPut = [
+exports.postEditPut = [
   body('title')
+    .optional()
     .trim()
     .isLength({ max: 500 })
     .withMessage('Title must be within 500 characters')
     .escape(),
   body('content')
+    .optional()
     .trim()
     .isLength({ min: 1, max: 10000 })
     .withMessage('Content must be within 1—10000 characters')
     .escape(),
+  body('isPublished')
+    .optional()
+    .trim()
+    .isBoolean()
+    .withMessage('isPublished must be boolean'),
 
   asyncHandler(async (req, res) => {
     const errors = validationResult(req).array();
-    if (errors.length) throw APIError(400, errors[0].msg, 'invalid_input');
-
     const post = await Post.findById(req.params.postID).exec();
+
+    if (errors.length) throw APIError(400, errors[0].msg, 'invalid_input');
     if (!post) throw APIError(404, 'Post not found', 'resource_not_found');
     if (post.user._id.toString() !== req.user._id.toString())
       throw APIError(
-        401,
-        'User is unauthorized to update this post',
-        'unauthorized',
+        403,
+        'User does not have permission to update this post',
+        'forbidden',
       );
 
-    const update = {
-      user: req.user,
-      title: req.body.title,
-      content: req.body.content,
-      isPublished: req.body.isPublished,
-      _id: req.params.postID,
-    };
+    post.title = req.body.title || post.title;
+    post.content = req.body.content || post.content;
+    post.isPublished = req.body.isPublished || post.isPublished;
 
-    try {
-      const data = await Post.findByIdAndUpdate(req.params.postID, update);
-      return res.json({ status: 'success', data });
-    } catch (err) {
-      throw APIError(err.status, err.message, 'database_error');
+    const data = await post.save();
+    return res.json({ status: 'success', data });
+  }),
+];
+
+exports.postReactPut = [
+  body('action')
+    .trim()
+    .matches(/^(like|dislike)$/)
+    .withMessage("Action must be either 'like' or 'dislike'"),
+  asyncHandler(async (req, res) => {
+    const errors = validationResult(req).array();
+    const [post, user] = await Promise.all([
+      Post.findById(req.params.postID).exec(),
+      User.findById(req.user._id).exec(),
+    ]);
+
+    if (errors.length) {
+      throw APIError(400, errors[0].msg, 'invalid_input');
     }
+    if (!post) {
+      throw APIError(404, 'Post not found', 'resource_not_found');
+    }
+    if (!post.isPublished) {
+      throw APIError(403, 'Post is not published', 'forbidden');
+    }
+    if (req.user._id.toString() === post.user.toString()) {
+      throw APIError(
+        403,
+        'User does not have permission for this action',
+        'forbidden',
+      );
+    }
+
+    user.reactedPosts.forEach((reactedPost, index) => {
+      if (reactedPost.postID.toString() !== post.id) return;
+      post.likes += reactedPost.reaction === 'like' ? -1 : 1;
+      user.reactedPosts.splice(index, index + 1);
+    });
+
+    post.likes += req.body.action === 'like' ? 1 : -1;
+    user.reactedPosts.push({ postID: post, reaction: req.body.action });
+
+    const data = await Promise.all([post.save(), user.save()]);
+    res.json({ status: 'success', data });
   }),
 ];
 
 exports.postDelete = asyncHandler(async (req, res) => {
   const post = await Post.findById(req.params.postID).exec();
-  if (!post) throw APIError(404, 'Post not found', 'resource_not_found');
 
+  if (!post) throw APIError(404, 'Post not found', 'resource_not_found');
   if (post.user._id.toString() !== req.user._id.toString()) {
     throw APIError(
-      401,
-      'User is unauthorized to delete this post',
-      'unauthorized',
+      403,
+      'User does not have permission to delete this post',
+      'forbidden',
     );
   }
 
-  try {
-    const data = await Post.findByIdAndDelete(req.params.postID);
-    await User.findByIdAndUpdate(req.user._id, {
-      posts: req.user.posts.filter(
-        (value) => value._id.toString() !== post._id.toString(),
-      ),
-    });
-    return res.json({ status: 'success', data });
-  } catch (err) {
-    throw APIError(err.status, err.message, 'database_error');
-  }
+  const data = await Post.findByIdAndDelete(req.params.postID);
+  await User.findByIdAndUpdate(req.user._id, {
+    posts: req.user.posts.filter(
+      (value) => value._id.toString() !== post._id.toString(),
+    ),
+  });
+  return res.json({ status: 'success', data });
 });
 
 exports.postsByUserGet = asyncHandler(async (req, res) => {
-  try {
-    const user = await User.findById(req.params.userID)
-      .populate('posts')
-      .exec();
-    if (!user) throw APIError(404, 'User not found', 'resource_not_found');
-    return res.json({ status: 'success', data: user.posts });
-  } catch (err) {
-    throw APIError(err.status, err.message, 'database_error');
-  }
+  const user = await User.findById(req.params.userID).populate('posts').exec();
+  if (!user) throw APIError(404, 'User not found', 'resource_not_found');
+  return res.json({ status: 'success', data: user.posts });
 });
 
 exports.postByUserGet = asyncHandler(async (req, res) => {
-  try {
-    const user = await User.findById(req.params.userID)
-      .populate('posts')
-      .exec();
-    if (!user) throw APIError(404, 'User not found', 'resource_not_found');
-    const post = user.posts.find((value) => value.id === req.params.postID);
-    if (!post) throw APIError(404, 'Post not found', 'resource_not_found');
-    return res.json({ status: 'success', data: post });
-  } catch (err) {
-    throw APIError(err.status, err.message, 'database_error');
-  }
+  const user = await User.findById(req.params.userID).populate('posts').exec();
+  if (!user) throw APIError(404, 'User not found', 'resource_not_found');
+  const post = user.posts.find((value) => value.id === req.params.postID);
+  if (!post) throw APIError(404, 'Post not found', 'resource_not_found');
+  return res.json({ status: 'success', data: post });
 });

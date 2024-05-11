@@ -12,6 +12,7 @@ const PostSchema = new mongoose.Schema({
   time: { type: Date, default: Date.now },
   isPublished: { type: Boolean, default: false },
   comments: { type: [mongoose.Schema.Types.ObjectId], ref: 'Comment' },
+  likes: { type: Number, default: 0 },
 });
 
 PostSchema.virtual('formattedTime').get(function () {

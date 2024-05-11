@@ -46,14 +46,16 @@ app.use((req, res) =>
 );
 
 app.use((err, req, res, next) => {
-  if (err) {
-    return res.status(err.status || 500).json({
-      status: 'error',
-      message: err.message || 'Unexpected server error',
-      code: err.code,
-    });
-  }
-  next();
+  if (!err) next();
+
+  if (!err.code && err instanceof mongoose.Error) err.code = 'database_error';
+  if (!err.code) err.code = 'internal_server_error';
+
+  return res.status(err.status || 500).json({
+    status: 'error',
+    message: err.message || 'Unexpected server error',
+    code: err.code,
+  });
 });
 
 module.exports = app;
