@@ -18,16 +18,30 @@ router.post('/login', authenticate('json'), authController.loginPost);
 
 /// POST ROUTES ///
 
-// Handle GET request to fetch all posts
+// Handle GET request to fetch all published posts
 router.get('/posts', postsController.postsGet);
 
-// Handle GET request to fetch a post
+// Handle GET request to fetch all posts by the authenticated user
+router.get(
+  '/posts/auth',
+  authenticate('jwt'),
+  postsController.postsByClientGet,
+);
+
+// Handle GET request to fetch any post by the authenticated user
+router.get(
+  '/posts/:postID/auth',
+  authenticate('jwt'),
+  postsController.postByClientGet,
+);
+
+// Handle GET request to fetch a published post
 router.get('/posts/:postID', postsController.postGet);
 
-// Handle GET request to fetch all posts by a user
+// Handle GET request to fetch all published posts by a user
 router.get('/users/:userID/posts', postsController.postsByUserGet);
 
-// Handle GET request to fetch a post by a user
+// Handle GET request to fetch a published post by a user
 router.get('/users/:userID/posts/:postID', postsController.postByUserGet);
 
 // Handle POST request to create a post

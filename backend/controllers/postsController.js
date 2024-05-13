@@ -141,14 +141,19 @@ exports.postEditPut = [
     const errors = validationResult(req).array();
     const post = await Post.findById(req.params.postID).exec();
 
-    if (errors.length) throw APIError(400, errors[0].msg, 'invalid_input');
-    if (!post) throw APIError(404, 'Post not found', 'resource_not_found');
-    if (post.user._id.toString() !== req.user._id.toString())
+    if (errors.length) {
+      throw APIError(400, errors[0].msg, 'invalid_input');
+    }
+    if (!post) {
+      throw APIError(404, 'Post not found', 'resource_not_found');
+    }
+    if (post.user.toString() !== req.user.id) {
       throw APIError(
         403,
         'User does not have permission to update this post',
         'forbidden',
       );
+    }
 
     post.title = req.body.title || post.title;
     post.content = req.body.content || post.content;
@@ -177,7 +182,7 @@ exports.postReactPut = [
     if (!post) {
       throw APIError(404, 'Post not found', 'resource_not_found');
     }
-    if (!post.isPublished) {
+    if (!post.isPublished && req.user.id !== post.user.toString()) {
       throw APIError(403, 'Post is not published', 'forbidden');
     }
     if (req.user._id.toString() === post.user.toString()) {
@@ -205,7 +210,9 @@ exports.postReactPut = [
 exports.postDelete = asyncHandler(async (req, res) => {
   const post = await Post.findById(req.params.postID).exec();
 
-  if (!post) throw APIError(404, 'Post not found', 'resource_not_found');
+  if (!post) {
+    throw APIError(404, 'Post not found', 'resource_not_found');
+  }
   if (post.user._id.toString() !== req.user._id.toString()) {
     throw APIError(
       403,
@@ -216,9 +223,7 @@ exports.postDelete = asyncHandler(async (req, res) => {
 
   const data = await Post.findByIdAndDelete(req.params.postID);
   await User.findByIdAndUpdate(req.user._id, {
-    posts: req.user.posts.filter(
-      (value) => value._id.toString() !== post._id.toString(),
-    ),
+    posts: req.user.posts.filter((postId) => postId.toString() !== post.id),
   });
   return res.json({ status: 'success', data });
 });
