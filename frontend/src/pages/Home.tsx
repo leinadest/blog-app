@@ -1,16 +1,27 @@
 import Layout from '../components/layout/Layout';
 import PostList from '../components/posts/PostList';
 import { IPost } from '../types/types';
+import { fetchPosts } from '../services/backendService';
+import { useState, useEffect } from 'react';
 
 export default function Home() {
-  const examplePostData: IPost = {
-    title: 'aefefafewfcewfcewf',
-    author: 'john smith',
-    time: 'Jan. 1, 2024',
-    content: ''.padEnd(100, ''.padEnd(100, 'x')),
-  };
-  const popularPostsData: IPost[] = Array(8).fill(examplePostData);
-  const newPostsData: IPost[] = Array(8).fill(examplePostData);
+  const [popularPosts, setPopularPosts] = useState<IPost[] | null>(null);
+  const [newPosts, setNewPosts] = useState<IPost[]>([]);
+
+  useEffect(() => {
+    fetchPosts()
+      .then((posts: IPost[]) => {
+        const popularPostsFetched = posts
+          .sort((a, b) => a.likes - b.likes)
+          .slice(0, 6);
+        const newPostsFetched = posts
+          .sort((a, b) => Date.parse(b.time) - Date.parse(a.time))
+          .slice(0, 6);
+        setPopularPosts(popularPostsFetched);
+        setNewPosts(newPostsFetched);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <Layout>
@@ -22,14 +33,20 @@ export default function Home() {
         </p>
       </section>
       <main>
-        <section>
-          <h2>Popular Blogs</h2>
-          <PostList postsData={popularPostsData} />
-        </section>
-        <section>
-          <h2>Newest Blogs</h2>
-          <PostList postsData={newPostsData} />
-        </section>
+        {!popularPosts ? (
+          <h2 className="loading">Loading...</h2>
+        ) : (
+          <>
+            <section>
+              <h2>Popular Blogs</h2>
+              <PostList postsData={popularPosts} />
+            </section>
+            <section>
+              <h2>Newest Blogs</h2>
+              <PostList postsData={newPosts} />
+            </section>
+          </>
+        )}
       </main>
     </Layout>
   );

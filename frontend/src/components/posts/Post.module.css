@@ -1,8 +1,7 @@
 .section {
-  height: 250px;
-  background-color: var(--primary-color-200);
+  height: 300px;
+  background-color: var(--primary-color-100);
   padding: var(--spacing-small) var(--spacing-medium);
-  word-wrap: break-word;
 }
 .section:hover {
   box-shadow: darkgray 0 0 10px;
@@ -10,4 +9,11 @@
 
 .meta {
   margin-top: -20px;
+}
+
+.description {
+  height: 200px;
+  overflow-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

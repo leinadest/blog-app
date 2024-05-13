@@ -6,19 +6,15 @@ interface PostProps {
 }
 
 export default function Post({ data }: PostProps) {
-  const { title, author, time, content } = data;
+  const { title, user, formattedTime, content } = data;
 
   return (
     <section className={styles.section}>
       <h2>{title}</h2>
       <p className={styles.meta}>
-        {author} | {time}
+        {user?.username} | {formattedTime}
       </p>
-      <p className={styles.descrption}>
-        {content.length < 100
-          ? content
-          : content.substring(0, 100).concat('...')}
-      </p>
+      <p className={styles.description}>{content}</p>
     </section>
   );
 }
