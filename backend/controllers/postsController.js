@@ -6,7 +6,12 @@ const Post = require('../models/post');
 const User = require('../models/user');
 
 exports.postsGet = asyncHandler(async (req, res) => {
-  const posts = await Post.find().exec();
+  let posts = await Post.find().sort('time').populate('user').exec();
+  posts = posts.map((post) => {
+    const newPost = post;
+    newPost.formattedTime = post.formattedTime;
+    return newPost;
+  });
   return res.json({ status: 'success', data: posts });
 });
 
