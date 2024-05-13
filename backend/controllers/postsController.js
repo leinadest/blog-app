@@ -7,18 +7,17 @@ const User = require('../models/user');
 
 exports.postsGet = asyncHandler(async (req, res) => {
   let posts = await Post.find().sort('time').populate('user').exec();
-  posts = posts.map((post) => {
-    const newPost = post;
-    newPost.formattedTime = post.formattedTime;
-    return newPost;
-  });
+  posts = posts.map((post) => post.toObject({ virtuals: true }));
   return res.json({ status: 'success', data: posts });
 });
 
 exports.postGet = asyncHandler(async (req, res) => {
   const post = await Post.findById(req.params.postID).exec();
   if (!post) throw APIError(404, 'Post not found', 'resource_not_found');
-  return res.json({ status: 'success', data: post });
+  return res.json({
+    status: 'success',
+    data: post.toObject({ virtuals: true }),
+  });
 });
 
 exports.postCreatePost = [
@@ -48,7 +47,10 @@ exports.postCreatePost = [
     await User.findByIdAndUpdate(req.user._id, {
       posts: [...req.user.posts, post],
     });
-    return res.json({ status: 'success', data: post });
+    return res.json({
+      status: 'success',
+      data: post,
+    });
   }),
 ];
 

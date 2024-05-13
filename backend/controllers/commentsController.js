@@ -11,6 +11,9 @@ exports.commentsOnPostGet = asyncHandler(async (req, res) => {
     .populate('comments')
     .exec();
   if (!post) throw APIError(404, 'Post not found', 'resource_not_found');
+  post.comments = post.comments.map((comment) =>
+    comment.toObject({ virtuals: true }),
+  );
   return res.json({ status: 'success', data: post.comments });
 });
 
@@ -25,7 +28,10 @@ exports.commentOnPostGet = asyncHandler(async (req, res) => {
   );
   if (!comment) throw APIError(404, 'Comment not found', 'resource_not_found');
 
-  return res.json({ status: 'success', data: comment });
+  return res.json({
+    status: 'success',
+    data: comment.toObject({ virtuals: true }),
+  });
 });
 
 exports.commentsByUserGet = asyncHandler(async (req, res) => {
@@ -33,6 +39,9 @@ exports.commentsByUserGet = asyncHandler(async (req, res) => {
     .populate('comments')
     .exec();
   if (!user) throw APIError(404, 'User not found', 'resource_not_found');
+  user.comments = user.comments.map((comment) =>
+    comment.toObject({ virtuals: true }),
+  );
   return res.json({ status: 'success', data: user.comments });
 });
 
@@ -47,7 +56,10 @@ exports.commentByUserGet = asyncHandler(async (req, res) => {
   );
   if (!comment) throw APIError(404, 'Comment not found', 'resource_not_found');
 
-  return res.json({ status: 'success', data: comment });
+  return res.json({
+    status: 'success',
+    data: comment.toObject({ virtuals: true }),
+  });
 });
 
 exports.commentCreatePost = [
