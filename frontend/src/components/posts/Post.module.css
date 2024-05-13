@@ -1,0 +1,10 @@
+.section {
+  height: 250px;
+  background-color: var(--primary-color-200);
+  padding: var(--spacing-small) var(--spacing-medium);
+  word-wrap: break-word;
+}
+
+.meta {
+  margin-top: -20px;
+}
