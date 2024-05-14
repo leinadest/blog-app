@@ -1,8 +1,9 @@
-import Layout from '../components/layout/Layout';
-import PostList from '../components/posts/PostList';
 import { IPost } from '../types/types';
 import { fetchPosts } from '../services/backendService';
 import { useState, useEffect } from 'react';
+import Layout from '../components/layout/Layout';
+import PostList from '../components/posts/PostList';
+import Banner from '../components/common/Banner';
 
 export default function Home() {
   const [popularPosts, setPopularPosts] = useState<IPost[] | null>(null);
@@ -25,13 +26,10 @@ export default function Home() {
 
   return (
     <Layout>
-      <section className="welcome">
-        <h2>Welcome</h2>
-        <p>
-          Sign up and log in to write a blog, and read blogs published by other
-          users!
-        </p>
-      </section>
+      <Banner heading="Welcome">
+        Sign up and log in to write a blog, and read blogs published by other
+        users!
+      </Banner>
       <main>
         {!popularPosts ? (
           <h2 className="loading">Loading...</h2>

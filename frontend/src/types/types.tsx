@@ -26,3 +26,15 @@ export interface IPost {
   comments: IComment[];
   likes: number;
 }
+
+export interface IFormData {
+  username: string;
+  email: string;
+  password: string;
+  confirmedPassword: string;
+}
+
+export interface IFormError {
+  field: string;
+  message: string;
+}

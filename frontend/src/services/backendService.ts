@@ -1,3 +1,6 @@
+export const apiUrl =
+  import.meta.env.VITE_BLOG_API_URL || 'http://localhost:3000/api';
+
 async function fetchData(url: string, options = {}) {
   try {
     const response = await fetch(url, options);
@@ -13,12 +16,32 @@ async function fetchData(url: string, options = {}) {
   }
 }
 
-const apiUrl = import.meta.env.VITE_BLOG_API_URL || 'http://localhost:3000/api';
-
 export async function fetchPosts() {
   const uri = '/posts';
   const response = await fetchData(`${apiUrl}${uri}`);
   return response.data;
 }
 
-fetchPosts().then((res) => console.log(res));
+export async function fetchSignup(
+  username: string,
+  email: string,
+  password: string,
+) {
+  const uri = '/register';
+  const response = await fetchData(`${apiUrl}${uri}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ username, email, password }),
+  });
+  return response.data;
+}
+
+export async function fetchUsers() {
+  const uri = '/users';
+  const response = await fetchData(`${apiUrl}${uri}`);
+  return response.data;
+}
+
+// fetchPosts().then((res) => console.log(res));

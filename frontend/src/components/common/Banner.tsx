@@ -1,0 +1,16 @@
+import React from 'react';
+import styles from './Banner.module.css';
+
+interface BannerProps {
+  heading: string;
+  children: React.ReactNode;
+}
+
+export default function Banner({ heading, children }: BannerProps) {
+  return (
+    <section className={styles.section}>
+      <h2>{heading}</h2>
+      <p>{children}</p>
+    </section>
+  );
+}

@@ -1,0 +1,6 @@
+.section {
+  color: var(--primary-color-100);
+  text-align: center;
+  background-color: var(--primary-color-400);
+  padding: var(--spacing-small) var(--spacing-medium);
+}
