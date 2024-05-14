@@ -5,7 +5,7 @@ const User = require('../models/user');
 
 exports.usersGet = asyncHandler(async (req, res) => {
   try {
-    const users = await User.find({}, 'username').exec();
+    const users = await User.find({}, { username: 1, email: 1 }).exec();
     return res.json({ status: 'success', data: users });
   } catch (err) {
     throw APIError(err.status, err.message, 'database_error');

@@ -101,7 +101,7 @@ router.delete(
 /// USER ROUTES ///
 
 // Handle GET request to fetch all users
-router.get('/users', authenticate('jwt'), usersController.usersGet);
+router.get('/users', usersController.usersGet);
 
 // Handle GET request to fetch a user
 router.get('/users/:userID', authenticate('jwt'), usersController.userGet);
