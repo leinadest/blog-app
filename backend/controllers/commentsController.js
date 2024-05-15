@@ -8,7 +8,10 @@ const User = require('../models/user');
 
 exports.commentsOnPostGet = asyncHandler(async (req, res) => {
   const post = await Post.findById(req.params.postID)
-    .populate('comments')
+    .populate({
+      path: 'comments',
+      populate: { path: 'user', select: 'username email' },
+    })
     .exec();
   if (!post) throw APIError(404, 'Post not found', 'resource_not_found');
   post.comments = post.comments.map((comment) =>
@@ -19,7 +22,10 @@ exports.commentsOnPostGet = asyncHandler(async (req, res) => {
 
 exports.commentOnPostGet = asyncHandler(async (req, res) => {
   const post = await Post.findById(req.params.postID)
-    .populate('comments')
+    .populate({
+      path: 'comments',
+      populate: { path: 'user', select: 'username email' },
+    })
     .exec();
   if (!post) throw APIError(404, 'Post not found', 'resource_not_found');
 
@@ -36,7 +42,10 @@ exports.commentOnPostGet = asyncHandler(async (req, res) => {
 
 exports.commentsByUserGet = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.userID)
-    .populate('comments')
+    .populate({
+      path: 'comments',
+      populate: { path: 'user', select: 'username email' },
+    })
     .exec();
   if (!user) throw APIError(404, 'User not found', 'resource_not_found');
   user.comments = user.comments.map((comment) =>
@@ -47,7 +56,10 @@ exports.commentsByUserGet = asyncHandler(async (req, res) => {
 
 exports.commentByUserGet = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.userID)
-    .populate('comments')
+    .populate({
+      path: 'comments',
+      populate: { path: 'user', select: 'username email' },
+    })
     .exec();
   if (!user) throw APIError(404, 'User not found', 'resource_not_found');
 

@@ -6,18 +6,82 @@ const Post = require('../models/post');
 const User = require('../models/user');
 
 exports.postsGet = asyncHandler(async (req, res) => {
-  let posts = await Post.find().sort('time').populate('user').exec();
-  posts = posts.map((post) => post.toObject({ virtuals: true }));
+  const posts = (
+    await Post.find()
+      .sort('time')
+      .populate({ path: 'user', select: 'username email' })
+      .exec()
+  )
+    .filter((post) => post.isPublished)
+    .map((post) => post.toObject({ virtuals: true }));
   return res.json({ status: 'success', data: posts });
 });
 
 exports.postGet = asyncHandler(async (req, res) => {
-  const post = await Post.findById(req.params.postID).exec();
-  if (!post) throw APIError(404, 'Post not found', 'resource_not_found');
+  const post = await Post.findById(req.params.postID)
+    .populate({ path: 'user', select: 'username email' })
+    .populate({
+      path: 'comments',
+      populate: { path: 'user', select: 'username email' },
+    })
+    .exec();
+  if (!post) {
+    throw APIError(404, 'Post not found', 'resource_not_found');
+  }
   return res.json({
     status: 'success',
     data: post.toObject({ virtuals: true }),
   });
+});
+
+exports.postsByUserGet = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.userID).populate('posts').exec();
+  if (!user) {
+    throw APIError(404, 'User not found', 'resource_not_found');
+  }
+  return res.json({ status: 'success', data: user.posts });
+});
+
+exports.postByUserGet = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.userID)
+    .populate('posts')
+    .populate({
+      path: 'comments',
+      populate: { path: 'user', select: 'username' },
+    })
+    .exec();
+  if (!user) {
+    throw APIError(404, 'User not found', 'resource_not_found');
+  }
+
+  const post = user.posts.find((value) => value.id === req.params.postID);
+  if (!post) {
+    throw APIError(404, 'Post not found', 'resource_not_found');
+  }
+
+  return res.json({ status: 'success', data: post });
+});
+
+exports.postsByClientGet = asyncHandler(async (req, res) => {
+  const posts = await Post.find({ _id: { $in: req.user.posts } }).exec();
+  return res.json({ status: 'success', data: posts });
+});
+
+exports.postByClientGet = asyncHandler(async (req, res) => {
+  const post = await Post.findById(req.params.postID)
+    .populate({
+      path: 'comments',
+      populate: { path: 'user', select: 'username' },
+    })
+    .exec();
+  if (!post || post.user.toString() !== req.user.id) {
+    throw APIError(
+      404,
+      `User does not have a post with ID ${req.params.postID}`,
+      'resource_not_found',
+    );
+  }
+  return res.json({ status: 'success', data: post });
 });
 
 exports.postCreatePost = [
@@ -157,18 +221,4 @@ exports.postDelete = asyncHandler(async (req, res) => {
     ),
   });
   return res.json({ status: 'success', data });
-});
-
-exports.postsByUserGet = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.userID).populate('posts').exec();
-  if (!user) throw APIError(404, 'User not found', 'resource_not_found');
-  return res.json({ status: 'success', data: user.posts });
-});
-
-exports.postByUserGet = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.userID).populate('posts').exec();
-  if (!user) throw APIError(404, 'User not found', 'resource_not_found');
-  const post = user.posts.find((value) => value.id === req.params.postID);
-  if (!post) throw APIError(404, 'Post not found', 'resource_not_found');
-  return res.json({ status: 'success', data: post });
 });
