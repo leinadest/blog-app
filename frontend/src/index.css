@@ -82,6 +82,28 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-medium);
+  width: 400px;
+  max-width: 80vw;
+}
+form input {
+  display: block;
+  width: 100%;
+}
+form button {
+  margin-block: var(--spacing-medium);
+  align-self: center;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin: 0;
+}
+
 .loading {
   text-align: center;
   opacity: 0;

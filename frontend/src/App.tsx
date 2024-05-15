@@ -1,7 +1,18 @@
+import { useEffect } from 'react';
 import Router from './Router';
+import { useProfile } from './contexts/ProfileContext';
+import backendService from './services/backendService';
+import authService from './services/authService';
 
-function App() {
+export default function App() {
+  const { setProfile } = useProfile();
+
+  useEffect(() => {
+    if (!authService.getToken()) return;
+    backendService.getUser().then((user) => {
+      setProfile(user.data);
+    });
+  }, []);
+
   return <Router />;
 }
-
-export default App;

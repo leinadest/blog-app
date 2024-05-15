@@ -23,3 +23,12 @@
   color: var(--primary-color-400);
   text-decoration: underline;
 }
+
+.header button {
+  color: var(--primary-color-400);
+  padding: 0;
+}
+.header button:hover {
+  text-decoration: underline;
+  border: solid transparent;
+}

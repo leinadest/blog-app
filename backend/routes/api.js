@@ -117,7 +117,11 @@ router.delete(
 // Handle GET request to fetch all users
 router.get('/users', usersController.usersGet);
 
-// Handle GET request to fetch a user
-router.get('/users/:userID', authenticate('jwt'), usersController.userGet);
+// Handle GET request to fetch a user's profile
+router.get(
+  '/users/profile',
+  authenticate('jwt'),
+  usersController.userProfileGet,
+);
 
 module.exports = router;

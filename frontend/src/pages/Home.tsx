@@ -1,34 +1,37 @@
-import { IPost } from '../types/types';
-import { fetchPosts } from '../services/backendService';
+import { APIResponse, IPost } from '../types/types';
+import backendService from '../services/backendService';
 import { useState, useEffect } from 'react';
 import Layout from '../components/layout/Layout';
 import PostList from '../components/posts/PostList';
 import Banner from '../components/common/Banner';
+import { useProfile } from '../contexts/ProfileContext';
 
 export default function Home() {
   const [popularPosts, setPopularPosts] = useState<IPost[] | null>(null);
   const [newPosts, setNewPosts] = useState<IPost[]>([]);
+  const { username } = useProfile();
 
   useEffect(() => {
-    fetchPosts()
-      .then((posts: IPost[]) => {
-        const popularPostsFetched = posts
+    backendService
+      .getPosts()
+      .then((res: APIResponse) => {
+        if (res.status === 'error') throw new Error(res.message);
+        const popularPostsFetched = (res.data as IPost[])
           .sort((a, b) => a.likes - b.likes)
           .slice(0, 6);
-        const newPostsFetched = posts
+        const newPostsFetched = (res.data as IPost[])
           .sort((a, b) => Date.parse(b.time) - Date.parse(a.time))
           .slice(0, 6);
         setPopularPosts(popularPostsFetched);
         setNewPosts(newPostsFetched);
       })
-      .catch((err) => console.log(err));
+      .catch((err: Error) => console.log(err));
   }, []);
 
   return (
     <Layout>
-      <Banner heading="Welcome">
-        Sign up and log in to write a blog, and read blogs published by other
-        users!
+      <Banner heading={`Welcome ${username}`.trim()}>
+        Write a blog or read blogs published by other users!
       </Banner>
       <main>
         {!popularPosts ? (

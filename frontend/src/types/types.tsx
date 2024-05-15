@@ -3,8 +3,8 @@ export interface IUser {
   email: string;
   posts: IPost[];
   comments: IComment[];
-  reactedPosts: IPost[];
-  reactedComments: IComment[];
+  reactedPosts: IReactedPost[];
+  reactedComments: IReactedComment[];
 }
 
 export interface IComment {
@@ -27,14 +27,23 @@ export interface IPost {
   likes: number;
 }
 
-export interface IFormData {
-  username: string;
-  email: string;
-  password: string;
-  confirmedPassword: string;
+export interface IReactedComment {
+  commentID: string;
+  reaction: string;
 }
 
-export interface IFormError {
-  field: string;
-  message: string;
+export interface IReactedPost {
+  postID: string;
+  reaction: string;
+}
+
+export interface IProfileContext extends IUser {
+  setProfile: (user: IUser) => void;
+}
+
+export interface APIResponse {
+  status: 'success' | 'error';
+  data?: string | IUser | IComment | IPost | IUser[] | IComment[] | IPost[];
+  message?: string;
+  code?: string;
 }
