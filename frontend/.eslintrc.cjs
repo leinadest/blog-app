@@ -5,11 +5,8 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
-    'prettier'
+    'prettier',
   ],
-  overrides: [{
-    files: ['/**/*.ts', '/**/*.tsx']
-  }],
   ignorePatterns: ['dist', '.eslintrc.cjs', '/**/frontend/*'],
   parser: '@typescript-eslint/parser',
   plugins: ['react-refresh'],
@@ -19,4 +16,4 @@ module.exports = {
       { allowConstantExport: true },
     ],
   },
-}
+};

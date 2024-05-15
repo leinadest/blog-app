@@ -1,5 +1,5 @@
 import styles from './Header.module.css';
-import { useProfile } from '../../contexts/ProfileContext';
+import useProfile from '../../hooks/useProfile';
 import authService from '../../services/authService';
 import { Link, useNavigate } from 'react-router-dom';
 

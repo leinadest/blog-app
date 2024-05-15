@@ -25,7 +25,7 @@ const validationSchema = yup.object({
     .string()
     .email('Email format is invalid')
     .test('unique', 'Email must not be used already', async (value) => {
-      const users = await backendService.getUsers();
+      const users = (await backendService.getUsers()).data;
       const userFound = users.find((user: IUser) => user.email === value);
       return !userFound;
     })

@@ -1,0 +1,28 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  text-align: center;
+  background-color: var(--primary-color-300);
+  box-sizing: border-box;
+  padding: var(--spacing-medium);
+}
+.section form {
+  max-width: 100%;
+  width: 100%;
+  padding: var(--spacing-medium);
+  box-sizing: border-box;
+}
+.section textarea {
+  height: 100px;
+  resize: none;
+}
+.section button {
+  border-color: var(--primary-color-400);
+}
+.section button:hover {
+  border-color: var(--primary-color-400);
+  background-color: var(--primary-color-400);
+  color: var(--primary-color-200);
+}

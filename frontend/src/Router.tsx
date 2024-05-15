@@ -3,6 +3,7 @@ import Home from './pages/Home';
 import Signup from './pages/Signup';
 import Success from './pages/Success';
 import Login from './pages/Login';
+import PostPage from './pages/PostPage';
 
 export default function Router() {
   const router = createBrowserRouter([
@@ -21,6 +22,10 @@ export default function Router() {
     {
       path: '/login',
       element: <Login />,
+    },
+    {
+      path: '/posts/:postId',
+      element: <PostPage />,
     },
   ]);
 

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Layout from '../components/layout/Layout';
 import PostList from '../components/posts/PostList';
 import Banner from '../components/common/Banner';
-import { useProfile } from '../contexts/ProfileContext';
+import useProfile from '../hooks/useProfile';
 
 export default function Home() {
   const [popularPosts, setPopularPosts] = useState<IPost[] | null>(null);
@@ -17,7 +17,7 @@ export default function Home() {
       .then((res: APIResponse) => {
         if (res.status === 'error') throw new Error(res.message);
         const popularPostsFetched = (res.data as IPost[])
-          .sort((a, b) => a.likes - b.likes)
+          .sort((a, b) => b.likes - a.likes)
           .slice(0, 6);
         const newPostsFetched = (res.data as IPost[])
           .sort((a, b) => Date.parse(b.time) - Date.parse(a.time))

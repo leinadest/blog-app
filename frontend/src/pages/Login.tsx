@@ -4,9 +4,10 @@ import Layout from '../components/layout/Layout';
 import authService from '../services/authService';
 import backendService from '../services/backendService';
 import { useForm } from 'react-hook-form';
-import { useProfile } from '../contexts/ProfileContext';
+import useProfile from '../hooks/useProfile';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { IUser } from '../types/types';
 
 interface FormValues {
   email?: string;
@@ -28,7 +29,9 @@ export default function Login() {
   });
   const { register, handleSubmit, formState, setError } = form;
   const { errors, isSubmitting } = formState;
-  const { setProfile } = useProfile();
+  const setProfile = useProfile().setProfile as React.MutableRefObject<
+    (user: IUser) => void
+  >;
   const navigate = useNavigate();
 
   function onSubmit(data: FormValues) {
@@ -54,7 +57,7 @@ export default function Login() {
         }
         authService.setToken(res.data);
         const user = (await backendService.getUser()).data;
-        setProfile(user);
+        setProfile.current(user);
         navigate('/');
       } catch (err) {
         console.error(err);

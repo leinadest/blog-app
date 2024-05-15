@@ -1,0 +1,6 @@
+.section {
+  padding: var(--spacing-small) var(--spacing-medium);
+}
+.section p {
+  overflow-wrap: break-word;
+}

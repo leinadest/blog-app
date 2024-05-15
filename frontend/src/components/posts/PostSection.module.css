@@ -1,0 +1,10 @@
+.section {
+  width: 100%;
+  text-align: center;
+  margin-bottom: var(--spacing-large);
+}
+
+.content {
+  text-align: left;
+  overflow-wrap: break-word;
+}

@@ -1,30 +1,11 @@
 export interface IUser {
+  id: string;
   username: string;
   email: string;
-  posts: IPost[];
-  comments: IComment[];
+  posts: string[];
+  comments: string[];
   reactedPosts: IReactedPost[];
   reactedComments: IReactedComment[];
-}
-
-export interface IComment {
-  user: IUser;
-  post: string;
-  content: string;
-  time: string;
-  formattedTime: string;
-  likes: number;
-}
-
-export interface IPost {
-  user: IUser;
-  title: string;
-  content: string;
-  time: string;
-  formattedTime: string;
-  isPublished: boolean;
-  comments: IComment[];
-  likes: number;
 }
 
 export interface IReactedComment {
@@ -37,8 +18,30 @@ export interface IReactedPost {
   reaction: string;
 }
 
+export interface IComment {
+  id: string;
+  user: IUser;
+  post: string;
+  content: string;
+  time: string;
+  formattedTime: string;
+  likes: number;
+}
+
+export interface IPost {
+  id: string;
+  user: IUser;
+  title: string;
+  content: string;
+  time: string;
+  formattedTime: string;
+  isPublished: boolean;
+  comments: string[] | IComment[];
+  likes: number;
+}
+
 export interface IProfileContext extends IUser {
-  setProfile: (user: IUser) => void;
+  setProfile: null | React.MutableRefObject<(user: IUser) => void>;
 }
 
 export interface APIResponse {

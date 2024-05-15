@@ -9,9 +9,9 @@ interface PostListProps {
 export default function PostList({ postsData }: PostListProps) {
   return (
     <ul className={styles.ul}>
-      {postsData.map((postData, index) => (
-        <li>
-          <Post key={index} data={postData} />
+      {postsData.map((postData) => (
+        <li key={postData.id}>
+          <Post data={postData} />
         </li>
       ))}
     </ul>
