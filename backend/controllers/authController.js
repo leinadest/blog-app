@@ -52,22 +52,14 @@ exports.registerPost = [
       salt,
     };
 
-    try {
-      const data = await User.create(userInfo);
-      return res.json({ status: 'success', data });
-    } catch (err) {
-      throw APIError(err.status, err.message, 'database_error');
-    }
+    const data = await User.create(userInfo);
+    return res.json({ status: 'success', data });
   }),
 ];
 
 exports.loginPost = asyncHandler(async (req, res) => {
-  try {
-    const data = jwt.sign({ user: req.user }, process.env.JWT_SECRET, {
-      expiresIn: '1d',
-    });
-    return res.json({ status: 'success', data });
-  } catch (err) {
-    throw APIError(err.status, err.messagae, 'internal_sever_error');
-  }
+  const data = jwt.sign({ user: req.user }, process.env.JWT_SECRET, {
+    expiresIn: '1d',
+  });
+  return res.json({ status: 'success', data });
 });

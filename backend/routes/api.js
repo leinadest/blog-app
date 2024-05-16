@@ -79,21 +79,21 @@ router.post(
 
 // Handle PUT request to edit a comment on a post
 router.put(
-  '/posts/:postID/comments/:commentID',
+  '/comments/:commentID',
   authenticate('jwt'),
   commentsController.commentEditPut,
 );
 
 // Handle PUT request to like/dislike a comment on a post
 router.put(
-  '/posts/:postID/comments/:commentID/react',
+  '/comments/:commentID/react',
   authenticate('jwt'),
   commentsController.commentReactPut,
 );
 
 // Handle DELETE request to delete a comment on a post
 router.delete(
-  '/posts/:postID/comments/:commentID',
+  '/comments/:commentID',
   authenticate('jwt'),
   commentsController.commentDelete,
 );
