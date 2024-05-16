@@ -64,12 +64,21 @@ exports.postByUserGet = asyncHandler(async (req, res) => {
 });
 
 exports.postsByClientGet = asyncHandler(async (req, res) => {
-  const posts = await Post.find({ _id: { $in: req.user.posts } }).exec();
+  const { count, sort, order, query } = req.query;
+  const posts = (
+    await Post.find({ _id: { $in: req.user.posts } })
+      .regex('title', query || '')
+      .limit(count)
+      .sort((sort && order && { [sort]: order }) || { likes: -1 })
+      .populate({ path: 'user', select: 'username email' })
+      .exec()
+  ).map((post) => post.toObject({ virtuals: true }));
   return res.json({ status: 'success', data: posts });
 });
 
 exports.postByClientGet = asyncHandler(async (req, res) => {
   const post = await Post.findById(req.params.postID)
+    .populate({ path: 'user', select: 'username email' })
     .populate({
       path: 'comments',
       populate: { path: 'user', select: 'username' },
