@@ -6,14 +6,15 @@ const Post = require('../models/post');
 const User = require('../models/user');
 
 exports.postsGet = asyncHandler(async (req, res) => {
+  const { count, sort, order, query } = req.query;
   const posts = (
-    await Post.find()
-      .sort('time')
+    await Post.find({ isPublished: true })
+      .regex('title', query || '')
+      .limit(count)
+      .sort((sort && order && { [sort]: order }) || { likes: -1 })
       .populate({ path: 'user', select: 'username email' })
       .exec()
-  )
-    .filter((post) => post.isPublished)
-    .map((post) => post.toObject({ virtuals: true }));
+  ).map((post) => post.toObject({ virtuals: true }));
   return res.json({ status: 'success', data: posts });
 });
 
