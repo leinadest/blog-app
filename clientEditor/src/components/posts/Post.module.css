@@ -1,0 +1,28 @@
+.section {
+  display: block;
+  color: var(--primary-color-400);
+  height: 300px;
+  background-color: var(--primary-color-100);
+  padding: var(--spacing-small) var(--spacing-medium);
+}
+.section:hover {
+  cursor: pointer;
+  box-shadow: darkgray 0 0 10px;
+}
+.section:focus {
+  box-shadow: darkgray 0 0 10px;
+}
+
+.meta {
+  margin-block: -35px -15px;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-small);
+}
+
+.description {
+  height: 200px;
+  overflow-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

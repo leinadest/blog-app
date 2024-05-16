@@ -1,0 +1,25 @@
+.section {
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-bottom: var(--spacing-large);
+}
+
+.content {
+  text-align: left;
+  overflow-wrap: break-word;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-small);
+}
+
+.meta {
+  margin-top: -30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-small);
+}
