@@ -11,7 +11,7 @@ export default function PostList({ postsData }: PostListProps) {
     <ul className={styles.ul}>
       {postsData.map((postData) => (
         <li key={postData.id}>
-          <Post data={postData} />
+          <Post post={postData} />
         </li>
       ))}
     </ul>

@@ -18,10 +18,17 @@
   height: 100px;
   resize: none;
 }
-.section button {
+
+.submit {
   border-color: var(--primary-color-400);
 }
-.section button:hover {
+.submit:hover {
+  border-color: var(--primary-color-400);
+  background-color: var(--primary-color-400);
+  color: var(--primary-color-200);
+}
+.submit:focus {
+  outline: none;
   border-color: var(--primary-color-400);
   background-color: var(--primary-color-400);
   color: var(--primary-color-200);

@@ -56,7 +56,9 @@ export default function CommentSection({ comments }: CommentSectionProps) {
           <form onSubmit={handleSubmit(onSubmit)}>
             <textarea {...register('content')}></textarea>
             <p className="error">{errors.content?.message}</p>
-            <button disabled={isSubmitting}>Submit</button>
+            <button className={styles.submit} disabled={isSubmitting}>
+              Submit
+            </button>
           </form>
         </>
       )}

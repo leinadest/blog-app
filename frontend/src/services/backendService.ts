@@ -33,6 +33,18 @@ const backendService = {
     return response;
   },
 
+  react: async (
+    route: 'posts' | 'comments',
+    dataId: string,
+    action: 'like' | 'dislike',
+  ) => {
+    const response = await fetchData(
+      getApiUrl(`${route}/${dataId}/react`),
+      getOptions('PUT', { action }),
+    );
+    return response;
+  },
+
   getUsers: async () => {
     const response = await fetchData(getApiUrl('users'), getOptions());
     return response;

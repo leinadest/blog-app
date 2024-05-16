@@ -1,0 +1,30 @@
+.div {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-small);
+}
+
+.img {
+  width: 20px;
+  height: 20px;
+}
+
+.button {
+  width: 35px;
+  height: 35px;
+  padding: 0;
+  background-color: transparent;
+  border-color: transparent;
+  border-radius: 50%;
+  margin-bottom: -5px;
+}
+.button:hover {
+  border-color: transparent;
+  background-color: hsl(0, 0%, 0%, 0.2);
+}
+.button:focus-visible {
+  background-color: hsl(0, 0%, 0%, 0.2);
+}
+.button:focus {
+  outline: none;
+}

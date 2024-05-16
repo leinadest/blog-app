@@ -6,17 +6,19 @@ import Layout from '../components/layout/Layout';
 import { IComment, IPost } from '../types/types';
 import PostSection from '../components/posts/PostSection';
 import CommentSection from '../components/comments/CommentSection';
+import useProfile from '../hooks/useProfile';
 
 export default function PostPage() {
   const { postId } = useParams();
   const [post, setPost] = useState<IPost>();
+  const profile = useProfile();
 
   useEffect(() => {
     backendService
       .getPost(postId as string)
       .then((fetchedPost) => setPost(fetchedPost.data))
       .catch((err) => console.error(err));
-  }, [postId]);
+  }, [postId, profile]);
 
   return (
     <Layout>

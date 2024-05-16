@@ -9,7 +9,7 @@ import useProfile from '../hooks/useProfile';
 export default function Home() {
   const [popularPosts, setPopularPosts] = useState<IPost[] | null>(null);
   const [newPosts, setNewPosts] = useState<IPost[]>([]);
-  const { username } = useProfile();
+  const { username, reactedPosts } = useProfile();
 
   useEffect(() => {
     backendService
@@ -26,7 +26,7 @@ export default function Home() {
         setNewPosts(newPostsFetched);
       })
       .catch((err: Error) => console.log(err));
-  }, []);
+  }, [reactedPosts]);
 
   return (
     <Layout>

@@ -9,7 +9,7 @@ export const ProfileContext = createContext<types.IProfileContext>({
   comments: [],
   reactedPosts: [],
   reactedComments: [],
-  setProfile: null,
+  setProfile: () => null,
 });
 
 export function ProfileProvider({ children }: { children: React.ReactNode }) {
@@ -31,6 +31,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
     setComments(user.comments);
     setReactedPosts(user.reactedPosts);
     setReactedComments(user.reactedComments);
+    console.log(user);
   });
 
   return (
@@ -43,7 +44,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         comments,
         reactedPosts,
         reactedComments,
-        setProfile,
+        setProfile: setProfile.current,
       }}
     >
       {children}

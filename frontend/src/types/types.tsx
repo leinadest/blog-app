@@ -41,7 +41,7 @@ export interface IPost {
 }
 
 export interface IProfileContext extends IUser {
-  setProfile: null | React.MutableRefObject<(user: IUser) => void>;
+  setProfile: (user: IUser) => void;
 }
 
 export interface APIResponse {

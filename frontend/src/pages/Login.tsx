@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form';
 import useProfile from '../hooks/useProfile';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { IUser } from '../types/types';
 
 interface FormValues {
   email?: string;
@@ -29,9 +28,7 @@ export default function Login() {
   });
   const { register, handleSubmit, formState, setError } = form;
   const { errors, isSubmitting } = formState;
-  const setProfile = useProfile().setProfile as React.MutableRefObject<
-    (user: IUser) => void
-  >;
+  const { setProfile } = useProfile();
   const navigate = useNavigate();
 
   function onSubmit(data: FormValues) {
@@ -57,7 +54,7 @@ export default function Login() {
         }
         authService.setToken(res.data);
         const user = (await backendService.getUser()).data;
-        setProfile.current(user);
+        setProfile(user);
         navigate('/');
       } catch (err) {
         console.error(err);
