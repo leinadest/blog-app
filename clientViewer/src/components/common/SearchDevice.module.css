@@ -1,0 +1,39 @@
+.form {
+  gap: var(--spacing-small);
+  text-align: center;
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-small);
+  background-color: var(--primary-color-100);
+  padding-left: var(--spacing-small);
+  border: 2px solid;
+  border-radius: 30px;
+}
+
+.form-group input {
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+
+.form-group button {
+  background-color: transparent;
+  outline: none;
+  border-color: transparent;
+  border-radius: 50%;
+  padding: 0 3px;
+  margin: 0;
+}
+.form-group button:hover,
+.form-group button:focus {
+  border-color: transparent;
+  background-color: hsla(0, 0%, 0%, 0.2);
+}
+
+.form-group img {
+  width: 25px;
+  height: 25px;
+}

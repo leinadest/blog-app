@@ -1,4 +1,4 @@
-import { APIResponse, IPost } from '../types/types';
+import { IPost } from '../types/types';
 import backendService from '../services/backendService';
 import { useState, useEffect } from 'react';
 import Layout from '../components/layout/Layout';
@@ -12,18 +12,13 @@ export default function Home() {
   const { username, reactedPosts } = useProfile();
 
   useEffect(() => {
-    backendService
-      .getPosts()
-      .then((res: APIResponse) => {
-        if (res.status === 'error') throw new Error(res.message);
-        const popularPostsFetched = (res.data as IPost[])
-          .sort((a, b) => b.likes - a.likes)
-          .slice(0, 6);
-        const newPostsFetched = (res.data as IPost[])
-          .sort((a, b) => Date.parse(b.time) - Date.parse(a.time))
-          .slice(0, 6);
-        setPopularPosts(popularPostsFetched);
-        setNewPosts(newPostsFetched);
+    Promise.all([
+      backendService.getPosts({ count: '6', sort: 'likes', order: 'asc' }),
+      backendService.getPosts({ count: '6', sort: 'time', order: 'desc' }),
+    ])
+      .then(([fetchedPopularPosts, fetchedNewPosts]) => {
+        setPopularPosts(fetchedPopularPosts.data);
+        setNewPosts(fetchedNewPosts.data);
       })
       .catch((err: Error) => console.log(err));
   }, [reactedPosts]);

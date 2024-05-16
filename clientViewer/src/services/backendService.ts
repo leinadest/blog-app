@@ -20,8 +20,12 @@ function getOptions(method?: 'GET' | 'POST' | 'PUT' | 'DELETE', body?: object) {
 }
 
 const backendService = {
-  getPosts: async () => {
-    const response = await fetchData(getApiUrl('posts'), getOptions());
+  getPosts: async (queryParams: Record<string, string>) => {
+    const params = new URLSearchParams(queryParams).toString();
+    const response = await fetchData(
+      getApiUrl(`posts?${params}`),
+      getOptions(),
+    );
     return response;
   },
 

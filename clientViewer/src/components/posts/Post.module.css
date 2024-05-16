@@ -1,4 +1,5 @@
 .section {
+  display: block;
   color: var(--primary-color-400);
   height: 300px;
   background-color: var(--primary-color-100);
