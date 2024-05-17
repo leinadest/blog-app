@@ -50,6 +50,8 @@ section {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  box-sizing: border-box;
   padding: var(--spacing-small) var(--spacing-medium) var(--spacing-medium);
 }
 
@@ -103,6 +105,9 @@ form input {
 form button {
   margin-block: var(--spacing-medium);
   align-self: center;
+}
+form input:hover {
+  cursor: pointer;
 }
 
 .error {

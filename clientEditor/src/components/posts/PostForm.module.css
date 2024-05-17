@@ -1,0 +1,12 @@
+.form {
+  width: 100%;
+}
+
+.form input[type='checkbox'] {
+  display: inline;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  top: 5px;
+  margin-right: 10px;
+}

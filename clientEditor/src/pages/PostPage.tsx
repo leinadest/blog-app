@@ -15,9 +15,9 @@ export default function PostPage() {
 
   useEffect(() => {
     backendService
-      .getPost(postId as string)
+      .getClientPost(postId as string)
       .then((fetchedPost) => setPost(fetchedPost.data))
-      .catch((err) => console.error(err));
+      .catch((err) => console.log(err));
   }, [postId, profile]);
 
   return (

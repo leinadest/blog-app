@@ -46,6 +46,14 @@ const backendService = {
     return response;
   },
 
+  getClientPost: async (postId: string) => {
+    const response = await fetchData(
+      getApiUrl(`posts/${postId}/auth`),
+      getOptions(),
+    );
+    return response;
+  },
+
   react: async (
     route: 'posts' | 'comments',
     dataId: string,
@@ -72,6 +80,18 @@ const backendService = {
     const response = await fetchData(
       getApiUrl(`posts/${postId}/comments`),
       getOptions('POST', { content }),
+    );
+    return response;
+  },
+
+  createPost: async (
+    content: string,
+    isPublished?: boolean,
+    title?: string,
+  ) => {
+    const response = await fetchData(
+      getApiUrl(`posts/`),
+      getOptions('POST', { title, content, isPublished }),
     );
     return response;
   },

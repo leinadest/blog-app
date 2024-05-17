@@ -2,6 +2,7 @@ import useProfile from '../../hooks/useProfile';
 import { IPost } from '../../types/types';
 import styles from './PostSection.module.css';
 import LikeDislikeDevice from '../common/LikeDislikeDevice';
+import he from 'he';
 
 interface PostDetailsProps {
   post: IPost;
@@ -16,7 +17,7 @@ export default function PostSection({ post }: PostDetailsProps) {
 
   return (
     <section className={styles.section}>
-      <h2>{post.title}</h2>
+      <h2>{he.decode(post.title)}</h2>
       <div className={styles.meta}>
         <p>By {post.user.username}</p>
         <div>|</div>
@@ -24,7 +25,10 @@ export default function PostSection({ post }: PostDetailsProps) {
         <div>|</div>
         <LikeDislikeDevice lastAction={lastAction} data={post} />
       </div>
-      <p className={styles.content}>{post.content}</p>
+      <p
+        className={styles.content}
+        dangerouslySetInnerHTML={{ __html: post.content }}
+      ></p>
     </section>
   );
 }

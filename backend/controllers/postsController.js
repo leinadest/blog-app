@@ -1,9 +1,31 @@
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
+const { JSDOM } = require('jsdom');
+const createDOMPurify = require('dompurify');
 
 const { APIError } = require('../utils/helpers');
 const Post = require('../models/post');
 const User = require('../models/user');
+
+/// SET-UP ///
+
+const { window } = new JSDOM('');
+const DOMPurify = createDOMPurify(window);
+
+/// HELPERS ///
+
+function validateContent(content) {
+  try {
+    const parser = new window.DOMParser();
+    const doc = parser.parseFromString(content, 'text/html');
+    const contentText = doc.body.textContent;
+    return contentText.length > 0 && contentText.length <= 10000;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+/// CONTROLLERS ///
 
 exports.postsGet = asyncHandler(async (req, res) => {
   const { count, sort, order, query } = req.query;
@@ -84,14 +106,17 @@ exports.postByClientGet = asyncHandler(async (req, res) => {
       populate: { path: 'user', select: 'username' },
     })
     .exec();
-  if (!post || post.user.toString() !== req.user.id) {
+  if (!post || post.user._id.toString() !== req.user.id) {
     throw APIError(
       404,
       `User does not have a post with ID ${req.params.postID}`,
       'resource_not_found',
     );
   }
-  return res.json({ status: 'success', data: post });
+  return res.json({
+    status: 'success',
+    data: post.toObject({ virtuals: true }),
+  });
 });
 
 exports.postCreatePost = [
@@ -102,9 +127,9 @@ exports.postCreatePost = [
     .escape(),
   body('content')
     .trim()
-    .isLength({ min: 1, max: 10000 })
-    .withMessage('Content must be within 1—10000 characters')
-    .escape(),
+    .customSanitizer((value) => DOMPurify.sanitize(value))
+    .custom(validateContent)
+    .withMessage('Content must be within 1—10000 characters'),
 
   asyncHandler(async (req, res) => {
     const errors = validationResult(req).array();
@@ -138,9 +163,9 @@ exports.postEditPut = [
   body('content')
     .optional()
     .trim()
-    .isLength({ min: 1, max: 10000 })
-    .withMessage('Content must be within 1—10000 characters')
-    .escape(),
+    .customSanitizer((value) => DOMPurify.sanitize(value))
+    .custom(validateContent)
+    .withMessage('Content must be within 1—10000 characters'),
   body('isPublished')
     .optional()
     .trim()

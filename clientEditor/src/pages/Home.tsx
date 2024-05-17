@@ -5,6 +5,7 @@ import Layout from '../components/layout/Layout';
 import PostList from '../components/posts/PostList';
 import Banner from '../components/common/Banner';
 import useProfile from '../hooks/useProfile';
+import { Link } from 'react-router-dom';
 
 export default function Home() {
   const [popularPosts, setPopularPosts] = useState<IPost[] | null>(null);
@@ -12,6 +13,7 @@ export default function Home() {
   const { username } = useProfile();
 
   useEffect(() => {
+    if (!username) return;
     Promise.all([
       backendService.getClientPosts({
         count: '6',
@@ -29,14 +31,23 @@ export default function Home() {
         setNewPosts(fetchedNewPosts.data);
       })
       .catch((err: Error) => console.log(err));
-  }, []);
+  }, [username]);
 
   return (
     <Layout>
-      <Banner heading={`Welcome ${username}`.trim()}>
-        {username
-          ? 'Create and edit your blogs and comments!'
-          : 'Sign up and log in to create and edit your blogs and comments!'}
+      <Banner
+        heading={`Welcome ${username}`.trim()}
+        paragraph={
+          username
+            ? 'Create posts and edit posts and comments!'
+            : 'Sign up and log in to create posts and edit posts and comments!'
+        }
+      >
+        {username && (
+          <Link to="posts/create">
+            <button>Create a new post</button>
+          </Link>
+        )}
       </Banner>
       {username && (
         <main>
