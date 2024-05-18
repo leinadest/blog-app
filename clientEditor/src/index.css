@@ -110,6 +110,11 @@ form input:hover {
   cursor: pointer;
 }
 
+dialog {
+  padding: var(--spacing-medium);
+  border: none;
+}
+
 .error {
   color: red;
   font-size: 12px;
@@ -120,6 +125,34 @@ form input:hover {
   text-align: center;
   opacity: 0;
   animation: fadeIn 0.5s linear 0.5s forwards;
+}
+
+.icon-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+}
+.icon-button img {
+  width: 25px;
+  height: 25px;
+}
+.icon-button:hover,
+.icon-button:focus {
+  background-color: hsla(0, 0%, 0%, 0.2);
+  outline: none;
+  border-color: transparent;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-small);
 }
 
 @keyframes fadeIn {

@@ -1,16 +1,19 @@
 import authService from './authService';
 import { fetchData, getApiUrl } from './helpers';
 
-function getOptions(method?: 'GET' | 'POST' | 'PUT' | 'DELETE', body?: object) {
+function getOptions(
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET',
+  body?: object,
+) {
   const token = authService.getToken();
   const options: RequestInit = {
+    method,
     headers: {
       Authorization: `bearer ${token}`,
     },
   };
 
   if (method === 'POST' || method === 'PUT') {
-    options.method = method;
     (options.headers as Record<string, string>)['Content-Type'] =
       'application/json';
     options.body = JSON.stringify(body);
@@ -54,6 +57,14 @@ const backendService = {
     return response;
   },
 
+  deletePost: async (postId: string) => {
+    const response = await fetchData(
+      getApiUrl(`posts/${postId}`),
+      getOptions('DELETE'),
+    );
+    return response;
+  },
+
   react: async (
     route: 'posts' | 'comments',
     dataId: string,
@@ -80,6 +91,14 @@ const backendService = {
     const response = await fetchData(
       getApiUrl(`posts/${postId}/comments`),
       getOptions('POST', { content }),
+    );
+    return response;
+  },
+
+  deleteComment: async (postId: string) => {
+    const response = await fetchData(
+      getApiUrl(`comments/${postId}`),
+      getOptions('DELETE'),
     );
     return response;
   },

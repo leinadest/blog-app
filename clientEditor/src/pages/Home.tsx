@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 export default function Home() {
   const [popularPosts, setPopularPosts] = useState<IPost[] | null>(null);
   const [newPosts, setNewPosts] = useState<IPost[]>([]);
-  const { username } = useProfile();
+  const { username, posts } = useProfile();
 
   useEffect(() => {
     if (!username) return;
@@ -31,7 +31,7 @@ export default function Home() {
         setNewPosts(fetchedNewPosts.data);
       })
       .catch((err: Error) => console.log(err));
-  }, [username]);
+  }, [username, posts]);
 
   return (
     <Layout>

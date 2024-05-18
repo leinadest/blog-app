@@ -1,49 +1,67 @@
 {
-  "hash": "b51d36ce",
+  "hash": "b50c953c",
   "configHash": "ac8916a2",
-  "lockfileHash": "6ca4c91e",
-  "browserHash": "3105008e",
+  "lockfileHash": "59512eb7",
+  "browserHash": "4f686566",
   "optimized": {
     "react/jsx-dev-runtime": {
       "src": "../../node_modules/react/jsx-dev-runtime.js",
       "file": "react_jsx-dev-runtime.js",
-      "fileHash": "64e55a62",
+      "fileHash": "ccd9f9f4",
       "needsInterop": true
     },
     "react": {
       "src": "../../node_modules/react/index.js",
       "file": "react.js",
-      "fileHash": "078a1e5e",
+      "fileHash": "9dab3aeb",
       "needsInterop": true
     },
     "react-dom/client": {
       "src": "../../node_modules/react-dom/client.js",
       "file": "react-dom_client.js",
-      "fileHash": "bcb90ca9",
+      "fileHash": "725a3724",
       "needsInterop": true
     },
     "react-router-dom": {
       "src": "../../node_modules/react-router-dom/dist/index.js",
       "file": "react-router-dom.js",
-      "fileHash": "0d870900",
+      "fileHash": "7bde384e",
       "needsInterop": false
     },
     "yup": {
       "src": "../../node_modules/yup/index.esm.js",
       "file": "yup.js",
-      "fileHash": "61edea6d",
+      "fileHash": "5a4c6536",
       "needsInterop": false
     },
     "react-hook-form": {
       "src": "../../node_modules/react-hook-form/dist/index.esm.mjs",
       "file": "react-hook-form.js",
-      "fileHash": "e5051aee",
+      "fileHash": "dee16eb6",
       "needsInterop": false
     },
     "@hookform/resolvers/yup": {
       "src": "../../node_modules/@hookform/resolvers/yup/dist/yup.mjs",
       "file": "@hookform_resolvers_yup.js",
-      "fileHash": "b8fc54a4",
+      "fileHash": "d8142181",
+      "needsInterop": false
+    },
+    "he": {
+      "src": "../../node_modules/he/he.js",
+      "file": "he.js",
+      "fileHash": "82dbefca",
+      "needsInterop": true
+    },
+    "@tinymce/tinymce-react": {
+      "src": "../../node_modules/@tinymce/tinymce-react/lib/es2015/main/ts/index.js",
+      "file": "@tinymce_tinymce-react.js",
+      "fileHash": "0a31c412",
+      "needsInterop": false
+    },
+    "dompurify": {
+      "src": "../../node_modules/dompurify/dist/purify.es.mjs",
+      "file": "dompurify.js",
+      "fileHash": "ff2c905d",
       "needsInterop": false
     }
   },

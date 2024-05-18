@@ -6,6 +6,7 @@ import ThumbDown from '../../assets/images/thumb_down.svg';
 import RedThumbDown from '../../assets/images/red_thumb_down.svg';
 import BlueThumbUp from '../../assets/images/blue_thumb_up.svg';
 import styles from './LikeDislikeDevice.module.css';
+import React from 'react';
 
 interface LikeDislikeDeviceProps {
   data: IPost | IComment;
@@ -19,7 +20,8 @@ export default function LikeDislikeDevice({
   const { setProfile } = useProfile();
   const dataType = 'title' in data ? 'post' : 'comment';
 
-  function handleLike() {
+  function handleLike(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    e.stopPropagation();
     if (lastAction === 'like') return;
     backendService
       .react(`${dataType}s`, data.id, 'like')
@@ -28,7 +30,8 @@ export default function LikeDislikeDevice({
       .catch((err) => console.error(err));
   }
 
-  function handleDislike() {
+  function handleDislike(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    e.stopPropagation();
     if (lastAction === 'dislike') return;
     backendService
       .react(`${dataType}s`, data.id, 'dislike')
@@ -45,7 +48,7 @@ export default function LikeDislikeDevice({
           src={lastAction && lastAction === 'like' ? BlueThumbUp : ThumbUp}
         />
       </button>
-      <p>{data.likes}</p>
+      <p className={styles.p}>{data.likes}</p>
       <button className={styles.button} onClick={handleDislike}>
         <img
           className={styles.img}

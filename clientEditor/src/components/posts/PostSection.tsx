@@ -1,8 +1,12 @@
+import he from 'he';
+
 import useProfile from '../../hooks/useProfile';
 import { IPost } from '../../types/types';
 import styles from './PostSection.module.css';
 import LikeDislikeDevice from '../common/LikeDislikeDevice';
-import he from 'he';
+import Edit from '../../assets/images/edit.svg';
+import { Link } from 'react-router-dom';
+import DeleteButton from '../common/DeleteButton';
 
 interface PostDetailsProps {
   post: IPost;
@@ -24,11 +28,16 @@ export default function PostSection({ post }: PostDetailsProps) {
         <p>{post.formattedTime}</p>
         <div>|</div>
         <LikeDislikeDevice lastAction={lastAction} data={post} />
+        <div>|</div>
+        <Link className={styles.device} to={`/posts/${post.id}/edit`}>
+          <img src={Edit}></img>
+        </Link>
+        <DeleteButton successRedirect="/" data={post} />
       </div>
-      <p
+      <div
         className={styles.content}
         dangerouslySetInnerHTML={{ __html: post.content }}
-      ></p>
+      ></div>
     </section>
   );
 }

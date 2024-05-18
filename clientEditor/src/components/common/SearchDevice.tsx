@@ -31,11 +31,11 @@ export default function SearchDevice({ setData }: SearchDeviceProps) {
       .catch((err) => console.error(err));
   }).current;
 
-  const { reactedPosts } = useProfile();
+  const { posts } = useProfile();
   useEffect(() => {
     const data = watch();
     setPosts(data);
-  }, [reactedPosts, watch, setPosts]);
+  }, [posts, watch, setPosts]);
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(setPosts)}>

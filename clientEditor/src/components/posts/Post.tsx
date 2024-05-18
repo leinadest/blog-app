@@ -1,10 +1,13 @@
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import he from 'he';
+
 import styles from './Post.module.css';
 import { IPost } from '../../types/types';
-import { useNavigate } from 'react-router-dom';
-import React from 'react';
 import useProfile from '../../hooks/useProfile';
 import LikeDislikeDevice from '../common/LikeDislikeDevice';
-import he from 'he';
+import Edit from '../../assets/images/edit.svg';
+import DeleteButton from '../common/DeleteButton';
 
 interface PostProps {
   post: IPost;
@@ -43,9 +46,15 @@ export default function Post({ post }: PostProps) {
         <div>|</div>
         <p>{post.formattedTime}</p>
         <div>|</div>
-        <LikeDislikeDevice lastAction={lastAction} data={post} />
+        <Link className="icon-button" to={`posts/${post.id}/edit`}>
+          <img src={Edit} alt="Edit" />
+        </Link>
+        <DeleteButton data={post} />
       </div>
       <p className={styles.description}>{htmlToText(post.content)}</p>
+      <div className={styles.bottom}>
+        <LikeDislikeDevice lastAction={lastAction} data={post} />
+      </div>
     </section>
   );
 }
