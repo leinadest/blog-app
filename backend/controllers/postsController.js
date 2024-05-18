@@ -48,9 +48,14 @@ exports.postGet = asyncHandler(async (req, res) => {
       populate: { path: 'user', select: 'username email' },
     })
     .exec();
+
   if (!post) {
     throw APIError(404, 'Post not found', 'resource_not_found');
   }
+  if (!post.isPublished) {
+    throw APIError(403, 'Post is not published', 'forbidden');
+  }
+
   return res.json({
     status: 'success',
     data: post.toObject({ virtuals: true }),
@@ -80,6 +85,9 @@ exports.postByUserGet = asyncHandler(async (req, res) => {
   const post = user.posts.find((value) => value.id === req.params.postID);
   if (!post) {
     throw APIError(404, 'Post not found', 'resource_not_found');
+  }
+  if (!post.isPublished) {
+    throw APIError(403, 'Post is not published', 'forbidden');
   }
 
   return res.json({ status: 'success', data: post });
@@ -119,6 +127,43 @@ exports.postByClientGet = asyncHandler(async (req, res) => {
   });
 });
 
+exports.reactedPostsByUserGet = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.userID)
+    .populate({
+      path: 'reactedPosts',
+      populate: {
+        path: 'postID',
+        populate: { path: 'user', select: 'username email' },
+      },
+    })
+    .populate({ path: 'comments', select: 'post' })
+    .exec();
+  if (!user) {
+    throw APIError(404, 'User not found', 'resource_not_found');
+  }
+
+  const reactedPosts = user.reactedPosts.filter((reactedPost) => {
+    let isValid = reactedPost.postID;
+    if (reactedPost.reaction === 'comment') {
+      isValid =
+        isValid &&
+        user.comments.find(
+          (comment) => comment.post.toString() === reactedPost.postID.id,
+        );
+    }
+    return isValid;
+  });
+
+  user.reactedPosts = reactedPosts;
+  await user.save();
+
+  const posts = reactedPosts.map((reactedPost) =>
+    reactedPost.postID.toObject({ virtuals: true }),
+  );
+
+  return res.json({ status: 'success', data: posts });
+});
+
 exports.postCreatePost = [
   body('title')
     .trim()
@@ -130,6 +175,10 @@ exports.postCreatePost = [
     .customSanitizer((value) => DOMPurify.sanitize(value))
     .custom(validateContent)
     .withMessage('Content must be within 1—10000 characters'),
+  body('isPublished')
+    .optional()
+    .isBoolean()
+    .withMessage('isPublished must be boolean'),
 
   asyncHandler(async (req, res) => {
     const errors = validationResult(req).array();
@@ -168,7 +217,6 @@ exports.postEditPut = [
     .withMessage('Content must be within 1—10000 characters'),
   body('isPublished')
     .optional()
-    .trim()
     .isBoolean()
     .withMessage('isPublished must be boolean'),
 
@@ -192,7 +240,7 @@ exports.postEditPut = [
 
     post.title = req.body.title || post.title;
     post.content = req.body.content || post.content;
-    post.isPublished = req.body.isPublished || post.isPublished;
+    post.isPublished = req.body.isPublished ?? post.isPublished;
 
     const data = await post.save();
     return res.json({ status: 'success', data });

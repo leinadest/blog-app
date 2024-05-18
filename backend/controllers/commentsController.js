@@ -97,6 +97,7 @@ exports.commentCreatePost = [
 
     post.comments.push(comment.id);
     user.comments.push(comment.id);
+    user.reactedPosts.push({ postID: post.id, reaction: 'comment' });
 
     const data = await Promise.all([post.save(), user.save(), comment.save()]);
     return res.json({ status: 'success', data: data[2] });
@@ -200,6 +201,10 @@ exports.commentDelete = asyncHandler(async (req, res) => {
   );
   user.comments = user.comments.filter(
     (value) => value._id.toString() !== comment.id,
+  );
+  user.reactedPosts = user.reactedPosts.filter(
+    (value) =>
+      value.postID.toString() !== comment.id || value.action !== 'comment',
   );
   await Promise.all([post.save(), user.save()]);
 

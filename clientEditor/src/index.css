@@ -106,9 +106,6 @@ form button {
   margin-block: var(--spacing-medium);
   align-self: center;
 }
-form input:hover {
-  cursor: pointer;
-}
 
 dialog {
   padding: var(--spacing-medium);

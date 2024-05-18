@@ -36,9 +36,10 @@ function DeleteButton({ data, successRedirect }: DeleteButtonProps) {
     e.stopPropagation();
     handleDialogToggle();
 
-    const deleteData = dataType
-      ? backendService.deletePost
-      : backendService.deleteComment;
+    const deleteData =
+      dataType === 'post'
+        ? backendService.deletePost
+        : backendService.deleteComment;
     deleteData(data.id)
       .then(() => backendService.getUser())
       .then((user) => setProfile(user.data))

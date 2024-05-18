@@ -14,7 +14,9 @@ interface PostDetailsProps {
 
 export default function PostSection({ post }: PostDetailsProps) {
   const { reactedPosts } = useProfile();
+  const { id } = useProfile();
 
+  const clientIsAuthor = id === post.user.id;
   const lastAction = reactedPosts.find(
     (reactedPost) => reactedPost.postID === post.id,
   )?.reaction as undefined | 'like' | 'dislike';
@@ -28,11 +30,15 @@ export default function PostSection({ post }: PostDetailsProps) {
         <p>{post.formattedTime}</p>
         <div>|</div>
         <LikeDislikeDevice lastAction={lastAction} data={post} />
-        <div>|</div>
-        <Link className={styles.device} to={`/posts/${post.id}/edit`}>
-          <img src={Edit}></img>
-        </Link>
-        <DeleteButton successRedirect="/" data={post} />
+        {clientIsAuthor && (
+          <>
+            <div>|</div>
+            <Link className={styles.device} to={`/posts/${post.id}/edit`}>
+              <img src={Edit}></img>
+            </Link>
+            <DeleteButton successRedirect="/" data={post} />
+          </>
+        )}
       </div>
       <div
         className={styles.content}

@@ -41,6 +41,14 @@ const backendService = {
     return response;
   },
 
+  getReactedPosts: async (userId: string) => {
+    const response = await fetchData(
+      getApiUrl(`users/${userId}/reactedPosts`),
+      getOptions(),
+    );
+    return response;
+  },
+
   getPost: async (postId: string) => {
     const response = await fetchData(
       getApiUrl(`posts/${postId}`),
@@ -111,6 +119,19 @@ const backendService = {
     const response = await fetchData(
       getApiUrl(`posts/`),
       getOptions('POST', { title, content, isPublished }),
+    );
+    return response;
+  },
+
+  updatePost: async (
+    postId: string,
+    content: string,
+    isPublished?: boolean,
+    title?: string,
+  ) => {
+    const response = await fetchData(
+      getApiUrl(`posts/${postId}`),
+      getOptions('PUT', { title, content, isPublished }),
     );
     return response;
   },

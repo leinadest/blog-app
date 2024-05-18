@@ -37,7 +37,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   return (
     <ProfileContext.Provider
       value={{
-        id: id,
+        id,
         username,
         email,
         posts,

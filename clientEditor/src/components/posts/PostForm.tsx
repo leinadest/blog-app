@@ -1,8 +1,9 @@
 import * as yup from 'yup';
 import { FieldErrors, UseFormSetError, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Editor } from '@tinymce/tinymce-react';
+import { Editor as EditorType } from 'tinymce/tinymce';
 import DOMPurify from 'dompurify';
 
 import { IPost } from '../../types/types';
@@ -30,15 +31,16 @@ interface PostFormProps {
 }
 
 export default function PostForm({ postData }: PostFormProps) {
+  const { postId } = useParams();
   const navigate = useNavigate();
-  const editorRef = useRef(null);
   const form = useForm({
-    defaultValues: { title: '', isPublished: true },
+    defaultValues: { title: postData?.title ?? '', isPublished: true },
     resolver: yupResolver(validationSchema.pick(['title', 'isPublished'])),
   });
   const { register, handleSubmit, formState } = form;
   const setError = form.setError as UseFormSetError<FormValues>;
   const errors = formState.errors as FieldErrors<FormValues>;
+  const editorRef = useRef<EditorType>();
 
   function htmlToText(html: string) {
     const parser = new DOMParser();
@@ -53,12 +55,25 @@ export default function PostForm({ postData }: PostFormProps) {
     title?: string;
     isPublished?: boolean;
   }) {
-    const htmlContent = editorRef.current.getContent();
+    const htmlContent = (editorRef.current as EditorType).getContent();
     const purifiedHtmlContent = DOMPurify.sanitize(htmlContent);
     const textContent = htmlToText(purifiedHtmlContent).trim();
     try {
       await validationSchema.validate({ content: textContent });
-      await backendService.createPost(purifiedHtmlContent, isPublished, title);
+      if (postId) {
+        await backendService.updatePost(
+          postId,
+          purifiedHtmlContent,
+          isPublished,
+          title,
+        );
+      } else {
+        await backendService.createPost(
+          purifiedHtmlContent,
+          isPublished,
+          title,
+        );
+      }
       navigate('/');
     } catch (err) {
       setError('content', { type: 'manual', message: (err as Error).message });
@@ -81,7 +96,11 @@ export default function PostForm({ postData }: PostFormProps) {
         <Editor
           apiKey={import.meta.env.VITE_TINYMCE_KEY}
           onInit={(_evt, editor) => (editorRef.current = editor)}
-          initialValue="<p>This is the initial content of the editor.</p>"
+          initialValue={
+            postData
+              ? postData.content
+              : '<p>This is the initial content of the editor.</p>'
+          }
           init={{
             height: 500,
             menubar: false,

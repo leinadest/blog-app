@@ -44,6 +44,12 @@ router.get('/users/:userID/posts', postsController.postsByUserGet);
 // Handle GET request to fetch a published post by a user
 router.get('/users/:userID/posts/:postID', postsController.postByUserGet);
 
+// Handle GET request to fetch all published posts reacted to by a user
+router.get(
+  '/users/:userID/reactedPosts',
+  postsController.reactedPostsByUserGet,
+);
+
 // Handle POST request to create a post
 router.post('/posts', authenticate('jwt'), postsController.postCreatePost);
 

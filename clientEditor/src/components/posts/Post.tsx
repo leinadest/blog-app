@@ -15,7 +15,9 @@ interface PostProps {
 
 export default function Post({ post }: PostProps) {
   const navigate = useNavigate();
-  const { reactedPosts } = useProfile();
+  const { id, reactedPosts } = useProfile();
+
+  const clientIsAuthor = id === post.user.id;
   const lastAction = reactedPosts.find(
     (reactedPost) => reactedPost.postID === post.id,
   )?.reaction as undefined | 'like' | 'dislike';
@@ -45,11 +47,15 @@ export default function Post({ post }: PostProps) {
         <p>{post.user.username}</p>
         <div>|</div>
         <p>{post.formattedTime}</p>
-        <div>|</div>
-        <Link className="icon-button" to={`posts/${post.id}/edit`}>
-          <img src={Edit} alt="Edit" />
-        </Link>
-        <DeleteButton data={post} />
+        {clientIsAuthor && (
+          <>
+            <div>|</div>
+            <Link className="icon-button" to={`posts/${post.id}/edit`}>
+              <img src={Edit} alt="Edit" />
+            </Link>
+            <DeleteButton data={post} />
+          </>
+        )}
       </div>
       <p className={styles.description}>{htmlToText(post.content)}</p>
       <div className={styles.bottom}>

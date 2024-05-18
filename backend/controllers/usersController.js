@@ -8,5 +8,5 @@ exports.usersGet = asyncHandler(async (req, res) => {
 });
 
 exports.userProfileGet = asyncHandler(async (req, res) =>
-  res.json({ status: 'success', data: req.user }),
+  res.json({ status: 'success', data: req.user.toObject({ virtuals: true }) }),
 );
