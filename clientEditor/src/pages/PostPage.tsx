@@ -13,12 +13,16 @@ export default function PostPage() {
   const [post, setPost] = useState<IPost>();
   const profile = useProfile();
 
+  const clientIsAuthor = profile.posts.includes(postId as string);
+
   useEffect(() => {
-    backendService
-      .getPost(postId as string)
+    const getPost = clientIsAuthor
+      ? backendService.getClientPost
+      : backendService.getPost;
+    getPost(postId as string)
       .then((fetchedPost) => setPost(fetchedPost.data))
       .catch((err) => console.log(err));
-  }, [postId, profile]);
+  }, [postId, profile, clientIsAuthor]);
 
   return (
     <Layout>

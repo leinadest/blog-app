@@ -113,13 +113,9 @@ exports.commentEditPut = [
   asyncHandler(async (req, res) => {
     const errors = validationResult(req).array();
     const comment = await Comment.findById(req.params.commentID).exec();
-    const post = await Post.findById(req.params.postID).exec();
 
     if (errors.length) {
       throw APIError(400, errors[0].msg, 'invalid_input');
-    }
-    if (!post) {
-      throw APIError(404, 'Post not found', 'resource_not_found');
     }
     if (!comment) {
       throw APIError(404, 'Comment not found', 'resource_not_found');

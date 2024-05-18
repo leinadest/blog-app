@@ -107,6 +107,10 @@ form button {
   align-self: center;
 }
 
+textarea {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
 dialog {
   padding: var(--spacing-medium);
   border: none;

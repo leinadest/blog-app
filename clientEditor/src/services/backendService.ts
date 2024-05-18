@@ -95,17 +95,25 @@ const backendService = {
     return response;
   },
 
-  createComment: async (postId: string, content: string) => {
+  createComment: async (commentId: string, content: string) => {
     const response = await fetchData(
-      getApiUrl(`posts/${postId}/comments`),
+      getApiUrl(`posts/${commentId}/comments`),
       getOptions('POST', { content }),
     );
     return response;
   },
 
-  deleteComment: async (postId: string) => {
+  updateComment: async (commentId: string, content: string) => {
     const response = await fetchData(
-      getApiUrl(`comments/${postId}`),
+      getApiUrl(`comments/${commentId}`),
+      getOptions('PUT', { content }),
+    );
+    return response;
+  },
+
+  deleteComment: async (commentId: string) => {
+    const response = await fetchData(
+      getApiUrl(`comments/${commentId}`),
       getOptions('DELETE'),
     );
     return response;
