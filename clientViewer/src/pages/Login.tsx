@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form';
 import useProfile from '../hooks/useProfile';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
-import errorsToRecord from '@hookform/resolvers/io-ts/dist/errorsToRecord.js';
 import { useState } from 'react';
 
 interface FormValues {
