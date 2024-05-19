@@ -68,7 +68,7 @@ export default function Comment({ comment }: CommentProps) {
         </>
       )}
       {mode === 'display' ? (
-        <p className={styles.content}>{comment.content}</p>
+        <p className={styles.content}>{he.decode(comment.content)}</p>
       ) : (
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
           <textarea id="content" {...register('content')}></textarea>

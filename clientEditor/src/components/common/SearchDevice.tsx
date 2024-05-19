@@ -26,7 +26,7 @@ export default function SearchDevice({ setData }: SearchDeviceProps) {
 
   const setPosts = useRef((data: { search: string }) => {
     backendService
-      .getClientPosts({ query: data.search })
+      .getPosts({ query: data.search })
       .then((posts) => setData(posts.data))
       .catch((err) => console.error(err));
   }).current;
@@ -34,7 +34,7 @@ export default function SearchDevice({ setData }: SearchDeviceProps) {
   const { posts } = useProfile();
   useEffect(() => {
     const data = watch();
-    setPosts(data);
+    if (data.search) setPosts(data);
   }, [posts, watch, setPosts]);
 
   return (

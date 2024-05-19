@@ -14,21 +14,40 @@
   box-shadow: darkgray 0 0 10px;
 }
 
+.section p,
+.section h2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .meta {
-  margin-block: -35px -15px;
   display: flex;
   align-items: center;
   gap: var(--spacing-small);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: -30px;
+}
+
+.meta p {
+  max-height: 45px;
 }
 
 .description {
   height: 100px;
   overflow-wrap: break-word;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .bottom {
   position: absolute;
   bottom: 20px;
+}
+
+@media (max-width: 500px) {
+  .section {
+    padding: var(--spacing-small);
+  }
+  .section p {
+    font-size: 14px;
+  }
 }

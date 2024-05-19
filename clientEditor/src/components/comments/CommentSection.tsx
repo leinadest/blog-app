@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import he from 'he';
 
 import { IComment } from '../../types/types';
 import CommentList from './CommentList';
@@ -34,7 +35,7 @@ export default function CommentSection({ comments }: CommentSectionProps) {
 
   function onSubmit(data: { content: string }) {
     backendService
-      .createComment(postId as string, data.content)
+      .createComment(postId as string, he.encode(data.content))
       .then(() => navigate(0))
       .catch(() => {
         setError('content', {

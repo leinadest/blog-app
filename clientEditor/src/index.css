@@ -116,6 +116,14 @@ dialog {
   border: none;
 }
 
+.white-section {
+  background-color: var(--primary-color-100);
+}
+
+.grey-section {
+  background-color: var(--primary-color-200);
+}
+
 .error {
   color: red;
   font-size: 12px;
@@ -175,5 +183,15 @@ dialog {
   }
   button {
     background-color: var(--primary-color-300);
+  }
+}
+
+@media (max-width: 500px) {
+  main,
+  section {
+    padding: var(--spacing-small);
+  }
+  form {
+    max-width: 90vw;
   }
 }

@@ -26,7 +26,7 @@ export default function PostPage() {
 
   return (
     <Layout>
-      <main>
+      <main className="white-section">
         {!post ? (
           <h2 className="loading">Loading...</h2>
         ) : (

@@ -44,7 +44,9 @@ export default function Post({ post }: PostProps) {
     >
       <h2>{he.decode(post.title)}</h2>
       <div className={styles.meta}>
-        <p>{post.user.username}</p>
+        <p>
+          {post.user.username} ({post.user.email})
+        </p>
         <div>|</div>
         <p>{post.formattedTime}</p>
         {clientIsAuthor && (

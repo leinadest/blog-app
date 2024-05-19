@@ -10,7 +10,7 @@ export default function Search() {
   return (
     <Layout>
       <section>
-        <h2>Search Your Posts</h2>
+        <h2>Search Posts</h2>
         <SearchDevice setData={setResults} />
       </section>
       <main>

@@ -19,9 +19,13 @@ export default function Header() {
       <Link to="/">
         <h1>Simply Edit Blogs</h1>
       </Link>
+      <Link to={import.meta.env.VITE_BLOGS_VIEW_PAGE}>View Blogs</Link>
       <Link to="/search">Search</Link>
       {isLoggedIn ? (
-        <button onClick={logout}>Log out</button>
+        <>
+          <Link to="/posts/create">Create</Link>
+          <button onClick={logout}>Log out</button>
+        </>
       ) : (
         <>
           <Link to="/signup">Sign up</Link>

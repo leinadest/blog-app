@@ -25,7 +25,9 @@ export default function PostSection({ post }: PostDetailsProps) {
     <section className={styles.section}>
       <h2>{he.decode(post.title)}</h2>
       <div className={styles.meta}>
-        <p>By {post.user.username}</p>
+        <p>
+          By {post.user.username} ({post.user.email})
+        </p>
         <div>|</div>
         <p>{post.formattedTime}</p>
         <div>|</div>

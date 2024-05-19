@@ -66,7 +66,7 @@ export default function Login() {
 
   return (
     <Layout>
-      <main>
+      <main className="white-section">
         <h2>Log In</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="form-control">

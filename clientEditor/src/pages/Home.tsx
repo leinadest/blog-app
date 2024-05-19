@@ -31,7 +31,7 @@ export default function Home() {
       .then(([fetchedPopularPosts, fetchedNewPosts, fetchedReactedPosts]) => {
         setPopularPosts(fetchedPopularPosts.data);
         setNewPosts(fetchedNewPosts.data);
-        setReactedPosts(fetchedReactedPosts.data.slice(0, 7));
+        setReactedPosts(fetchedReactedPosts.data.reverse().slice(0, 6));
       })
       .catch((err: Error) => console.log(err));
   }, [username, posts, id]);
