@@ -1,6 +1,6 @@
 .header {
   color: var(--primary-color-400);
-  background-color: var(--primary-color-300);
+  background-color: var(--primary-color-200);
   display: flex;
   align-items: center;
   gap: var(--spacing-medium);
@@ -17,6 +17,7 @@
 }
 
 .header a {
+  text-align: center;
   color: var(--primary-color-400);
 }
 .header a:hover {
@@ -25,10 +26,28 @@
 }
 
 .header button {
+  text-align: center;
   color: var(--primary-color-400);
+  background-color: var(--primary-color-200);
   padding: 0;
 }
 .header button:hover {
   text-decoration: underline;
   border: solid transparent;
+}
+
+@media (max-width: 500px) {
+  .header {
+    flex-wrap: wrap;
+    gap: var(--spacing-small) var(--spacing-medium);
+    justify-content: space-evenly;
+    text-align: center;
+    font-size: 14px;
+    padding: var(--spacing-small);
+  }
+
+  .header :first-child {
+    width: 100%;
+    margin-inline: auto;
+  }
 }

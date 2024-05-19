@@ -34,7 +34,7 @@ export default function SearchDevice({ setData }: SearchDeviceProps) {
   const { reactedPosts } = useProfile();
   useEffect(() => {
     const data = watch();
-    setPosts(data);
+    if (data.search) setPosts(data);
   }, [reactedPosts, watch, setPosts]);
 
   return (

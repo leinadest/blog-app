@@ -42,7 +42,6 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: var(--primary-color-200);
   padding: var(--spacing-small) var(--spacing-medium) var(--spacing-medium);
 }
 
@@ -50,6 +49,8 @@ section {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  box-sizing: border-box;
   padding: var(--spacing-small) var(--spacing-medium) var(--spacing-medium);
 }
 
@@ -105,6 +106,18 @@ form button {
   align-self: center;
 }
 
+textarea {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+.white-section {
+  background-color: var(--primary-color-100);
+}
+
+.grey-section {
+  background-color: var(--primary-color-200);
+}
+
 .error {
   color: red;
   font-size: 12px;
@@ -136,5 +149,20 @@ form button {
   }
   button {
     background-color: var(--primary-color-300);
+  }
+}
+
+@media (max-width: 500px) {
+  p {
+    font-size: 15px;
+  }
+
+  main,
+  section {
+    padding: var(--spacing-small);
+  }
+
+  form {
+    max-width: 90vw;
   }
 }

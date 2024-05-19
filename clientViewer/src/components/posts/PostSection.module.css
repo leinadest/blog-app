@@ -1,5 +1,6 @@
 .section {
   display: block;
+  background-color: var(--primary-color-100);
   width: 100%;
   text-align: center;
   margin-bottom: var(--spacing-large);

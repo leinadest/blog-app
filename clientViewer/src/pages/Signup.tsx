@@ -20,6 +20,7 @@ const validationSchema = yup.object({
     .string()
     .min(2, 'Username must have at least two characters')
     .max(50, 'Username must have at most 50 characters')
+    .matches(/^[a-zA-Z0-9]+$/, 'Username must contain only letters or numbers')
     .required('Username is required'),
   email: yup
     .string()

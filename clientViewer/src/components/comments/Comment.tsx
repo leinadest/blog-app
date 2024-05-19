@@ -1,3 +1,5 @@
+import he from 'he';
+
 import useProfile from '../../hooks/useProfile';
 import { IComment } from '../../types/types';
 import LikeDislikeDevice from '../common/LikeDislikeDevice';
@@ -19,7 +21,7 @@ export default function Comment({ comment }: CommentProps) {
       <p>
         {comment.user.username} ({comment.user.email})
       </p>
-      <p>{comment.content}</p>
+      <p>{he.decode(comment.content)}</p>
       <LikeDislikeDevice lastAction={lastAction} data={comment} />
     </section>
   );

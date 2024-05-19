@@ -4,6 +4,7 @@
   height: 300px;
   background-color: var(--primary-color-100);
   padding: var(--spacing-small) var(--spacing-medium);
+  position: relative;
 }
 .section:hover {
   cursor: pointer;
@@ -13,6 +14,12 @@
   box-shadow: darkgray 0 0 10px;
 }
 
+.section p,
+.section h2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .meta {
   margin-block: -35px -15px;
   display: flex;
@@ -20,9 +27,24 @@
   gap: var(--spacing-small);
 }
 
+.meta p {
+  max-height: 45px;
+}
+
 .description {
-  height: 200px;
+  height: 120px;
   overflow-wrap: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.bottom {
+  position: absolute;
+  bottom: 10px;
+}
+
+@media (max-width: 400px) {
+  .section {
+    padding: var(--spacing-small);
+  }
 }

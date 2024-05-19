@@ -13,7 +13,7 @@ export default function Home() {
 
   useEffect(() => {
     Promise.all([
-      backendService.getPosts({ count: '6', sort: 'likes', order: 'asc' }),
+      backendService.getPosts({ count: '6', sort: 'likes', order: 'desc' }),
       backendService.getPosts({ count: '6', sort: 'time', order: 'desc' }),
     ])
       .then(([fetchedPopularPosts, fetchedNewPosts]) => {
@@ -28,7 +28,7 @@ export default function Home() {
       <Banner heading={`Welcome ${username}`.trim()}>
         Write a blog or read blogs published by other users!
       </Banner>
-      <main>
+      <main className="grey-section">
         {!popularPosts ? (
           <h2 className="loading">Loading...</h2>
         ) : (
