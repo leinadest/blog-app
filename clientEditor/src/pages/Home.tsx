@@ -12,6 +12,9 @@ export default function Home() {
   const [newPosts, setNewPosts] = useState<IPost[]>();
   const [reactedPosts, setReactedPosts] = useState<IPost[]>();
   const { id, username, posts } = useProfile();
+  const [error, setError] = useState<Error>();
+
+  if (error) throw error;
 
   useEffect(() => {
     if (!username) return;
@@ -33,7 +36,7 @@ export default function Home() {
         setNewPosts(fetchedNewPosts.data);
         setReactedPosts(fetchedReactedPosts.data.reverse().slice(0, 6));
       })
-      .catch((err: Error) => console.log(err));
+      .catch((err: Error) => setError(err));
   }, [username, posts, id]);
 
   return (
@@ -53,7 +56,7 @@ export default function Home() {
         )}
       </Banner>
       {username && (
-        <main>
+        <main className="grey-section">
           {!popularPosts || !newPosts || !reactedPosts ? (
             <h2>Loading...</h2>
           ) : (

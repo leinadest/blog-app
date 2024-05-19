@@ -6,7 +6,7 @@ import Search from '../../assets/images/search.svg';
 import styles from './SearchDevice.module.css';
 import { IPost } from '../../types/types';
 import backendService from '../../services/backendService';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useProfile from '../../hooks/useProfile';
 
 interface SearchDeviceProps {
@@ -23,12 +23,15 @@ export default function SearchDevice({ setData }: SearchDeviceProps) {
     resolver: yupResolver(validationSchema),
   });
   const { errors, isSubmitting } = formState;
+  const [error, setError] = useState<Error>();
+
+  if (error) throw error;
 
   const setPosts = useRef((data: { search: string }) => {
     backendService
       .getPosts({ query: data.search })
       .then((posts) => setData(posts.data))
-      .catch((err) => console.error(err));
+      .catch((err) => setError(err));
   }).current;
 
   const { posts } = useProfile();

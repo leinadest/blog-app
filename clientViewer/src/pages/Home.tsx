@@ -10,6 +10,9 @@ export default function Home() {
   const [popularPosts, setPopularPosts] = useState<IPost[] | null>(null);
   const [newPosts, setNewPosts] = useState<IPost[]>([]);
   const { username, reactedPosts } = useProfile();
+  const [error, setError] = useState<Error>();
+
+  if (error) throw error;
 
   useEffect(() => {
     Promise.all([
@@ -20,7 +23,7 @@ export default function Home() {
         setPopularPosts(fetchedPopularPosts.data);
         setNewPosts(fetchedNewPosts.data);
       })
-      .catch((err: Error) => console.log(err));
+      .catch((err: Error) => setError(err));
   }, [reactedPosts]);
 
   return (

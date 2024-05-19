@@ -7,6 +7,8 @@ import { useForm } from 'react-hook-form';
 import useProfile from '../hooks/useProfile';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
+import errorsToRecord from '@hookform/resolvers/io-ts/dist/errorsToRecord.js';
+import { useState } from 'react';
 
 interface FormValues {
   email?: string;
@@ -30,6 +32,9 @@ export default function Login() {
   const { errors, isSubmitting } = formState;
   const { setProfile } = useProfile();
   const navigate = useNavigate();
+  const [pageError, setPageError] = useState<Error>();
+
+  if (pageError) throw pageError;
 
   function onSubmit(data: FormValues) {
     const { username, password } = data as Record<string, string>;
@@ -57,7 +62,7 @@ export default function Login() {
         setProfile(user);
         navigate('/');
       } catch (err) {
-        console.error(err);
+        setPageError(err as Error);
       }
     }
 

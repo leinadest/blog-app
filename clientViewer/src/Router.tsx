@@ -5,16 +5,27 @@ import Success from './pages/Success';
 import Login from './pages/Login';
 import PostPage from './pages/PostPage';
 import Search from './pages/Search';
+import ErrorBoundary from './components/common/ErrorBoundary';
+import Error from './pages/Error';
 
 export default function Router() {
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <Home />,
+      element: (
+        <ErrorBoundary>
+          <Home />
+        </ErrorBoundary>
+      ),
+      errorElement: <Error />,
     },
     {
       path: '/signup',
-      element: <Signup />,
+      element: (
+        <ErrorBoundary>
+          <Signup />
+        </ErrorBoundary>
+      ),
     },
     {
       path: '/success',
@@ -22,15 +33,27 @@ export default function Router() {
     },
     {
       path: '/login',
-      element: <Login />,
+      element: (
+        <ErrorBoundary>
+          <Login />
+        </ErrorBoundary>
+      ),
     },
     {
       path: '/posts/:postId',
-      element: <PostPage />,
+      element: (
+        <ErrorBoundary>
+          <PostPage />
+        </ErrorBoundary>
+      ),
     },
     {
       path: '/search',
-      element: <Search />,
+      element: (
+        <ErrorBoundary>
+          <Search />
+        </ErrorBoundary>
+      ),
     },
   ]);
 

@@ -12,12 +12,20 @@ export default function PostPage() {
   const { postId } = useParams();
   const [post, setPost] = useState<IPost>();
   const profile = useProfile();
+  const [error, setError] = useState<Error>();
+
+  if (error) throw error;
 
   useEffect(() => {
     backendService
       .getPost(postId as string)
-      .then((fetchedPost) => setPost(fetchedPost.data))
-      .catch((err) => console.error(err));
+      .then((response) => {
+        if (response.status === 'error') {
+          throw new Error(response.message);
+        }
+        setPost(response.data);
+      })
+      .catch((err) => setError(err));
   }, [postId, profile]);
 
   return (

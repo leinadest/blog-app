@@ -12,6 +12,9 @@ export default function PostPage() {
   const { postId } = useParams();
   const [post, setPost] = useState<IPost>();
   const profile = useProfile();
+  const [error, setError] = useState<Error>();
+
+  if (error) throw error;
 
   const clientIsAuthor = profile.posts.includes(postId as string);
 
@@ -20,8 +23,13 @@ export default function PostPage() {
       ? backendService.getClientPost
       : backendService.getPost;
     getPost(postId as string)
-      .then((fetchedPost) => setPost(fetchedPost.data))
-      .catch((err) => console.log(err));
+      .then((res) => {
+        if (res.status === 'error') {
+          throw new Error(res.message);
+        }
+        setPost(res.data);
+      })
+      .catch((err) => setError(err));
   }, [postId, profile, clientIsAuthor]);
 
   return (

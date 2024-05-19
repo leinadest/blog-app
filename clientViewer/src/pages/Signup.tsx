@@ -7,6 +7,7 @@ import authService from '../services/authService';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 interface FormValues {
   username?: string;
@@ -55,6 +56,9 @@ export default function Signup() {
   const { register, handleSubmit, formState } = form;
   const { errors, isSubmitting } = formState;
   const navigate = useNavigate();
+  const [pageError, setPageError] = useState<Error>();
+
+  if (pageError) throw pageError;
 
   function onSubmit(data: FormValues) {
     const { username, email, password } = data as Record<string, string>;
@@ -64,9 +68,7 @@ export default function Signup() {
       .then(() => {
         navigate('/success');
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => setPageError(err));
   }
 
   return (

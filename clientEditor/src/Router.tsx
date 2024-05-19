@@ -7,16 +7,27 @@ import PostPage from './pages/PostPage';
 import Search from './pages/Search';
 import PostCreatePage from './pages/PostCreatePage';
 import PostEditPage from './pages/PostEditPage';
+import ErrorBoundary from './components/common/ErrorBoundary';
+import Error from './pages/Error';
 
 export default function Router() {
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <Home />,
+      element: (
+        <ErrorBoundary>
+          <Home />
+        </ErrorBoundary>
+      ),
+      errorElement: <Error />,
     },
     {
       path: '/signup',
-      element: <Signup />,
+      element: (
+        <ErrorBoundary>
+          <Signup />
+        </ErrorBoundary>
+      ),
     },
     {
       path: '/success',
@@ -24,23 +35,43 @@ export default function Router() {
     },
     {
       path: '/login',
-      element: <Login />,
+      element: (
+        <ErrorBoundary>
+          <Login />
+        </ErrorBoundary>
+      ),
     },
     {
       path: '/posts/create',
-      element: <PostCreatePage />,
+      element: (
+        <ErrorBoundary>
+          <PostCreatePage />
+        </ErrorBoundary>
+      ),
     },
     {
       path: '/posts/:postId',
-      element: <PostPage />,
+      element: (
+        <ErrorBoundary>
+          <PostPage />
+        </ErrorBoundary>
+      ),
     },
     {
       path: '/posts/:postId/edit',
-      element: <PostEditPage />,
+      element: (
+        <ErrorBoundary>
+          <PostEditPage />
+        </ErrorBoundary>
+      ),
     },
     {
       path: '/search',
-      element: <Search />,
+      element: (
+        <ErrorBoundary>
+          <Search />
+        </ErrorBoundary>
+      ),
     },
   ]);
 

@@ -13,7 +13,7 @@ export default function Search() {
         <h2>Search Posts</h2>
         <SearchDevice setData={setResults} />
       </section>
-      <main>
+      <main className="grey-section">
         <h2>Results</h2>
         <p>There are {results.length} results</p>
         <PostList postsData={results} />
