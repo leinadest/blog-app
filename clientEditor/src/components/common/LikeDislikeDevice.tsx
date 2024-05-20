@@ -22,7 +22,7 @@ export default function LikeDislikeDevice({
 
   function handleLike(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.stopPropagation();
-    if (lastAction === 'like' || data.user.id === id) return;
+    if (data.user.id === id) return;
     backendService
       .react(`${dataType}s`, data.id, 'like')
       .then(() => backendService.getUser())
@@ -32,7 +32,7 @@ export default function LikeDislikeDevice({
 
   function handleDislike(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.stopPropagation();
-    if (lastAction === 'dislike' || data.user.id === id) return;
+    if (data.user.id === id) return;
     backendService
       .react(`${dataType}s`, data.id, 'dislike')
       .then(() => backendService.getUser())

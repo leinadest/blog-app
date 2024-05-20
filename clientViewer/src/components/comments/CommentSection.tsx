@@ -1,13 +1,16 @@
 import * as yup from 'yup';
+import he from 'he';
+import { useParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { useContext } from 'react';
 
 import { IComment } from '../../types/types';
 import CommentList from './CommentList';
 import styles from './CommentSection.module.css';
 import useProfile from '../../hooks/useProfile';
-import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useNavigate, useParams } from 'react-router-dom';
 import backendService from '../../services/backendService';
+import { PageContext } from '../../pages/PostPage';
 
 interface CommentSectionProps {
   comments: IComment[];
@@ -27,21 +30,20 @@ export default function CommentSection({ comments }: CommentSectionProps) {
     defaultValues: { content: '' },
     resolver: yupResolver(validationSchema),
   });
-  const navigate = useNavigate();
+  const { refreshPost } = useContext(PageContext);
 
   const { errors, isSubmitting } = formState;
   const isLoggedIn = !!username;
 
   function onSubmit(data: { content: string }) {
     backendService
-      .createComment(postId as string, data.content)
-      .then(() => navigate(0))
+      .createComment(postId as string, he.encode(data.content))
+      .then(() => refreshPost())
       .catch(() => {
         setError('content', {
           type: 'manual',
           message: 'An error has occurred; please try again',
         });
-        navigate(0);
       });
   }
 

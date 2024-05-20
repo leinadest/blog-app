@@ -31,7 +31,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
     setComments(user.comments);
     setReactedPosts(user.reactedPosts);
     setReactedComments(user.reactedComments);
-    console.log(user);
+    if (import.meta.env.DEV) console.log(user);
   });
 
   return (

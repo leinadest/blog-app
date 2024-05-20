@@ -4,10 +4,14 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const helmet = require('helmet');
 
 const apiRouter = require('./routes/api');
 
 const app = express();
+
+// Use security-related HTTP headers to prevent common web vulnerabilities
+app.use(helmet());
 
 // Set up mongoose connection
 

@@ -1,5 +1,5 @@
 import useProfile from '../../hooks/useProfile';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import he from 'he';
@@ -13,6 +13,7 @@ import DeleteButton from '../common/DeleteButton';
 import { yupResolver } from '@hookform/resolvers/yup';
 import backendService from '../../services/backendService';
 import { useNavigate } from 'react-router-dom';
+import { PageContext } from '../../pages/PostPage';
 
 interface CommentProps {
   comment: IComment;
@@ -35,7 +36,7 @@ export default function Comment({ comment }: CommentProps) {
   });
   const { errors, isSubmitting } = formState;
   const { id, reactedComments } = useProfile();
-  const navigate = useNavigate();
+  const { refreshPost } = useContext(PageContext);
 
   const clientIsAuthor = id === comment.user.id;
   const lastAction = reactedComments.find(
@@ -50,7 +51,8 @@ export default function Comment({ comment }: CommentProps) {
     const purifiedContent = DOMPurify.sanitize(data.content);
     backendService
       .updateComment(comment.id, purifiedContent)
-      .then(() => navigate(0))
+      .then(() => refreshPost())
+      .then(() => setMode('display'))
       .catch((err) => console.log(err));
   }
 

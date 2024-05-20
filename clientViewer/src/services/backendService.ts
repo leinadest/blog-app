@@ -37,6 +37,14 @@ const backendService = {
     return response;
   },
 
+  getClientPost: async (postId: string) => {
+    const response = await fetchData(
+      getApiUrl(`posts/${postId}/auth`),
+      getOptions(),
+    );
+    return response;
+  },
+
   react: async (
     route: 'posts' | 'comments',
     dataId: string,

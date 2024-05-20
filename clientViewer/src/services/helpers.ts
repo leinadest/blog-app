@@ -8,7 +8,7 @@ export function getApiUrl(endpoint: string) {
 export async function fetchData(url: string, options = {}) {
   try {
     const response = await fetch(url, options);
-    console.log(response);
+    if (import.meta.env.DEV) console.log(response);
     const data = await response.json();
     return data;
   } catch (error) {

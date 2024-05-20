@@ -276,14 +276,23 @@ exports.postReactPut = [
       );
     }
 
+    let lastLikeOrDislike = null;
     user.reactedPosts.forEach((reactedPost, index) => {
-      if (reactedPost.postID.toString() !== post.id) return;
+      if (
+        reactedPost.reaction === 'comment' ||
+        reactedPost.postID.toString() !== post.id
+      ) {
+        return;
+      }
+      lastLikeOrDislike = reactedPost.reaction;
       post.likes += reactedPost.reaction === 'like' ? -1 : 1;
       user.reactedPosts.splice(index, index + 1);
     });
 
-    post.likes += req.body.action === 'like' ? 1 : -1;
-    user.reactedPosts.push({ postID: post, reaction: req.body.action });
+    if (lastLikeOrDislike !== req.body.action) {
+      post.likes += req.body.action === 'like' ? 1 : -1;
+      user.reactedPosts.push({ postID: post, reaction: req.body.action });
+    }
 
     const data = await Promise.all([post.save(), user.save()]);
     res.json({ status: 'success', data });

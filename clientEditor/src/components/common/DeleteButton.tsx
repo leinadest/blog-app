@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
 import backendService from '../../services/backendService';
 import Delete from '../../assets/images/delete.svg';
@@ -15,6 +15,9 @@ function DeleteButton({ data, successRedirect }: DeleteButtonProps) {
   const { setProfile } = useProfile();
   const navigate = useNavigate();
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const [error, setError] = useState<Error>();
+
+  if (error) throw error;
 
   const dataType = 'title' in data ? 'post' : 'comment';
 
@@ -46,7 +49,7 @@ function DeleteButton({ data, successRedirect }: DeleteButtonProps) {
       .then(() => {
         if (successRedirect) navigate(successRedirect);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => setError(err));
   }
 
   return (
