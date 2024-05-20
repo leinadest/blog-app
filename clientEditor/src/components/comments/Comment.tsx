@@ -12,7 +12,6 @@ import styles from './Comment.module.css';
 import DeleteButton from '../common/DeleteButton';
 import { yupResolver } from '@hookform/resolvers/yup';
 import backendService from '../../services/backendService';
-import { useNavigate } from 'react-router-dom';
 import { PageContext } from '../../pages/PostPage';
 
 interface CommentProps {
