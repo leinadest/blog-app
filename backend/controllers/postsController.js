@@ -75,7 +75,7 @@ exports.postByUserGet = asyncHandler(async (req, res) => {
     .populate('posts')
     .populate({
       path: 'comments',
-      populate: { path: 'user', select: 'username' },
+      populate: { path: 'user', select: 'username email' },
     })
     .exec();
   if (!user) {
@@ -111,7 +111,7 @@ exports.postByClientGet = asyncHandler(async (req, res) => {
     .populate({ path: 'user', select: 'username email' })
     .populate({
       path: 'comments',
-      populate: { path: 'user', select: 'username' },
+      populate: { path: 'user', select: 'username email' },
     })
     .exec();
   if (!post || post.user._id.toString() !== req.user.id) {
