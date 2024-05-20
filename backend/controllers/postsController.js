@@ -276,20 +276,20 @@ exports.postReactPut = [
       );
     }
 
-    let lastLikeOrDislike = null;
+    let currentlyLiked = false;
     user.reactedPosts.forEach((reactedPost, index) => {
       if (
-        reactedPost.reaction === 'comment' ||
-        reactedPost.postID.toString() !== post.id
+        reactedPost.postID.toString() !== post.id ||
+        reactedPost.reaction === 'comment'
       ) {
         return;
       }
-      lastLikeOrDislike = reactedPost.reaction;
+      currentlyLiked = reactedPost.reaction === 'like';
       post.likes += reactedPost.reaction === 'like' ? -1 : 1;
       user.reactedPosts.splice(index, index + 1);
     });
 
-    if (lastLikeOrDislike !== req.body.action) {
+    if (currentlyLiked !== (req.body.action === 'like')) {
       post.likes += req.body.action === 'like' ? 1 : -1;
       user.reactedPosts.push({ postID: post, reaction: req.body.action });
     }

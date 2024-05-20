@@ -97,7 +97,15 @@ exports.commentCreatePost = [
 
     post.comments.push(comment.id);
     user.comments.push(comment.id);
-    user.reactedPosts.push({ postID: post.id, reaction: 'comment' });
+
+    const alreadyCommented = !!user.reactedPosts.find(
+      (reactedPost) =>
+        reactedPost.postID.toString() === post.id &&
+        reactedPost.reaction === 'comment',
+    );
+    if (!alreadyCommented) {
+      user.reactedPosts.push({ postID: post.id, reaction: 'comment' });
+    }
 
     const data = await Promise.all([post.save(), user.save(), comment.save()]);
     return res.json({ status: 'success', data: data[2] });
